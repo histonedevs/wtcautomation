@@ -33,15 +33,23 @@ class HomeController extends Controller
         $fromDate= Carbon::parse($request->get('fromDate'));
         $toDate= Carbon::parse($request->get('toDate'));
 
-        $results = DB::table('sale_orders')
-            ->where('user_id',$user )
-            ->where('created_at','>=', $fromDate)
-            ->where('updated_at', '<=', $toDate)
+        $results = DB::table('sale_order_items as soi')
+            ->select([
+                'so.amazon_order_id' , 'p.asin' , 'soi.item_price as price','soi.quantity_ordered as quantity',
+                'so.purchased_at', 'so.order_status' , 'b.name as buyer_name'
+            ])
+            ->join('sale_orders as so', 'soi.sale_order_id', '=' , 'so.id')
+            ->leftJoin('buyers as b', 'b.id' , '=', 'so.buyer_id')
+            ->join('products as p', 'soi.product_id' , '=' , 'p.id')
+            ->where('so.user_id',$user )
+            ->where('so.created_at','>=', $fromDate)
+            ->where('so.updated_at', '<=', $toDate)
             ->get();
 
         $filename = tempnam('', '').".csv";
-
+        $heading=array('Amazon Order','ASIN','Price','Quantity','Order Date', 'Order Status','Buyer Name');
         $fp = fopen($filename, 'w');
+        fputcsv($fp, $heading);
         foreach ($results as $result) {
             fputcsv($fp, (Array)$result);
         }
