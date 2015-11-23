@@ -11,6 +11,26 @@
 </head>
 <body>
 <div class="container">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">WTC</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav dropdown">
+                    <li class="active">
+                        <a href="#" href="#" data-toggle="dropdown" class="dropdown-toggle">Users<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url('/user')  }}">Add User</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="{{url ('/home')}}">Download</a></li>
+                </ul>
+            </div>
+            <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right">Sign Out</a>
+        </div>
+    </nav>
+
     @yield('content')
     @yield('show')
 </div>
