@@ -17,4 +17,7 @@ Route::get('/', function () {
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'home' => 'Home\HomeController',
+    'user' => 'UsersController',
 ]);
+
+Route::post('user','UsersController@postUser');

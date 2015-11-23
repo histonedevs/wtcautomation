@@ -46,6 +46,10 @@ class HomeController extends Controller
             ->where('so.updated_at', '<=', $toDate)
             ->get();
 
+         if($results) {
+
+         }
+
         $filename = tempnam('', '').".csv";
         $heading=array('Amazon Order','ASIN','Price','Quantity','Order Date', 'Order Status','Buyer Name');
         $fp = fopen($filename, 'w');
@@ -80,4 +84,5 @@ class HomeController extends Controller
         return $form;
 
     }
+
 }
