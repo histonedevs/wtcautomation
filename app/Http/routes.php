@@ -14,10 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'home' => 'Home\HomeController',
-    'user' => 'UsersController',
+    'users' => 'UsersController',
 ]);
-
-Route::post('user','UsersController@postUser');
