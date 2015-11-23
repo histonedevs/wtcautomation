@@ -45,7 +45,10 @@ class FetchOrders extends Command
      */
     private function callAPI($url){
         $curl = new Curl();
-        $r = $curl->get(env("API_URL")."/api/{$url}",
+        $curl->setConnectTimeout(3600);
+
+        $api_url = env("API_URL")."/api/{$url}";
+        $r = $curl->get($api_url,
             array(
                 'email' =>  env('API_USERNAME'),
                 'password' => env('API_PASSWORD')
@@ -54,6 +57,10 @@ class FetchOrders extends Command
 
         if(@isset($r->error)){
             throw new \Exception($r->error);
+        }
+
+        if(!$r && !is_array($r)){
+            throw new \Exception("No data returned");
         }
 
         return $r;
@@ -97,28 +104,37 @@ class FetchOrders extends Command
         $users = Account::all();
 
         foreach ($users as $user) {
-            while (count($r = $this->getMoreOrders($user)) > 0) {
+            $r = $this->getMoreOrders($user);
+            while (count($r) > 0) {
                 foreach ($r as $record) {
-                    $location = $this->saveItem('App\Location', $record->buyer->location);
+                    if($record->buyer_id && $record->buyer) {
+                        if($record->buyer->location) {
+                            $location = $this->saveItem('App\Location', $record->buyer->location);
+                            $record->buyer->location_id = $location->id;
+                        }
 
-                    $record->buyer->location_id = $location->id;
-                    $buyer = $this->saveItem('App\Buyer' , $record->buyer);
+                        $buyer = $this->saveItem('App\Buyer', $record->buyer);
+                        $record->buyer_id = $buyer->id;
+                    }
 
-                    $record->buyer_id = $buyer->id;
                     $record->user_id = Account::whereUniqueId($record->user_id)->first()->id;
 
                     $sale = $this->saveItem('App\SaleOrder' , $record);
 
-                    foreach ($record->sale_order_items as $row) {
-                        $row->product->user_id = $sale->user_id;
-                        $product = $this->saveItem('App\Product' , $row->product);
-
-                        $row->sale_order_id = $sale->id;
-                        $row->product_id = $product->id;
-
-                        $sale_order_item = $this->saveItem('App\SaleOrderItem' , $row);
+                    if($record->sale_order_items) {
+                        foreach ($record->sale_order_items as $row) {
+                            if($row->product) {
+                                $row->product->user_id = $sale->user_id;
+                                $product = $this->saveItem('App\Product', $row->product);
+                                $row->product_id = $product->id;
+                            }
+                            $row->sale_order_id = $sale->id;
+                            $sale_order_item = $this->saveItem('App\SaleOrderItem', $row);
+                        }
                     }
                 }
+
+                $r = $this->getMoreOrders($user);
             }
         }
     }
@@ -148,7 +164,7 @@ class FetchOrders extends Command
      */
     public function handle()
     {
-        $this->getUsers();
+        //$this->getUsers();
         $this->getOrders();
     }
 }
