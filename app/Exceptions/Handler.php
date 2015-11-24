@@ -30,8 +30,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        print $e->getTraceAsString();
-
         return parent::report($e);
     }
 
