@@ -2,7 +2,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <form role="form" method="POST" action="{{ url('/user') }}" >
+            <form role="form" method="POST" action="{{ url('users/add') }}" >
                 {!! csrf_field() !!}
                 <h3>Register User</h3>
                 <div class="form-group">

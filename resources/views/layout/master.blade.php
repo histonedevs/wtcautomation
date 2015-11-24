@@ -18,26 +18,36 @@
             </div>
             <div>
                 <ul class="nav navbar-nav dropdown">
-                    <li class="active">
-                        <a href="#" href="#" data-toggle="dropdown" class="dropdown-toggle">Users<span class="caret"></span></a>
+                    <li>
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Users<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('/user')  }}">Add User</a></li>
+                            <li><a href="{{ url('users/add') }}">Add User</a></li>
+                            <li><a href="{{ url('users/index')  }}">Display All Users</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{url ('/home')}}">Download</a></li>
+                    <li><a href="{{url ('home')}}">Download</a></li>
                 </ul>
             </div>
-            <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right">Sign Out</a>
+            <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right" style="margin-top:5px;">Sign Out</a>
+            <span style="float:right;margin-top:10px; margin-right:10px;">{{ isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email }}</span>
         </div>
     </nav>
-
     @yield('content')
     @yield('show')
 </div>
 </body>
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/bootstrap.min.js') !!}
-{!! Html::script('assets/js/bootstrap.datetimepicker.js') !!}
+{!! Html::script('assets/js/bootstrap-datetimepicker.js') !!}
 {!! Html::script('assets/js/jquery-ui.js') !!}
 @yield('page-script');
+<script>
+    $(document).ready(function () {
+        var url = window.location;
+        $('ul.nav a[href="' + url + '"]').parent().addClass('active');
+        $('ul.nav a').filter(function () {
+            return this.href == url;
+        }).parent().addClass('active').parent().parent().addClass('active');
+    });
+</script>
 </html>

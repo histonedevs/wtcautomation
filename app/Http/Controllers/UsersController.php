@@ -18,20 +18,48 @@ class UsersController extends Controller
      */
     public function getIndex()
     {
-         return view('users.add_user');
+        $users = User::all();
+        return view('users.index', compact('users'));
     }
 
-   public function postUser(Request $request)
-   {
-         $user = array(
-             'name' => $request->get('name'),
-             'email'=> $request->get('email'),
-             'password' => Hash::make($request->get('password'))
-         );
+    public function postAdd(Request $request)
+    {
+        $user = array(
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password'))
+        );
 
-         User::create($user);
+        User::create($user);
+        return redirect('users/index');
+    }
 
+    public function getAdd()
+    {
+        return view('users.add_user');
+    }
 
-   }
+    public function getDelete($id)
+    {
+        User::find($id)->delete();
+        return redirect('users/index');
+    }
+
+    public function getEdit($id)
+    {
+        $user = User::find($id);
+        return view('users.edit_user', compact('user'));
+    }
+
+    public function postEdit(Request $request, $id)
+    {
+        $request = array(
+            'name' => $request->get('name'),
+            'email' => $request->get('email')
+        );
+        $user = User::find($id);
+        $user->update($request);
+        return redirect('users/index');
+    }
 
 }
