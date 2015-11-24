@@ -101,7 +101,7 @@ class FetchOrders extends Command
      *
      */
     private function getOrders(){
-        $users = Account::all();
+        $users = Account::whereId(1)->get();
 
         foreach ($users as $user) {
             $r = $this->getMoreOrders($user);
@@ -164,7 +164,7 @@ class FetchOrders extends Command
      */
     public function handle()
     {
-        //$this->getUsers();
+        $this->getUsers();
         $this->getOrders();
     }
 }
