@@ -26,12 +26,16 @@
                         </ul>
                     </li>
                     <li><a href="{{url ('home')}}">Download</a></li>
+                    <li><a href="{{ url ('users/sms') }}">Send Sms</a></li>
                 </ul>
             </div>
             <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right" style="margin-top:5px;">Sign Out</a>
             <span style="float:right;margin-top:10px; margin-right:10px;">{{ isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email }}</span>
         </div>
     </nav>
+    @if (Session::has('message'))
+        <div class="alert alert-danger">{{ Session::get('message') }}</div>
+    @endif
     @yield('content')
     @yield('show')
 </div>

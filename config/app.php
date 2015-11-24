@@ -137,6 +137,7 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Illuminate\Html\HtmlServiceProvider::class,
+        Aloha\Twilio\Support\Laravel\ServiceProvider::class,
 
 
 
@@ -201,7 +202,8 @@ return [
         'Form'      => Illuminate\Html\FormFacade::class,
         'Html'      => Illuminate\Html\HtmlFacade::class,
         'FormBuilder' => Kris\LaravelFormBuilder\Facades\FormBuilder::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Twilio' => Aloha\Twilio\Support\Laravel\Facade::class,
     ],
 
 ];
