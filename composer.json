@@ -10,7 +10,8 @@
         "php-curl-class/php-curl-class": "^4.6",
         "illuminate/html": "^5.0",
         "kris/laravel-form-builder": "1.6.*",
-        "maatwebsite/excel": "~2.0.0"
+        "maatwebsite/excel": "~2.0.0",
+        "predis/predis": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
