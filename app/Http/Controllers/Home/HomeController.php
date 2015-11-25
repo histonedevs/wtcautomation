@@ -48,16 +48,15 @@ class HomeController extends Controller
 
          if($results) {
 
+             $filename = tempnam('', '').".csv";
+             $heading=array('Amazon Order','ASIN','Price','Quantity','Order Date', 'Order Status','Buyer Name');
+             $fp = fopen($filename, 'w');
+             fputcsv($fp, $heading);
+             foreach ($results as $result) {
+                 fputcsv($fp, (Array)$result);
+             }
+             fclose($fp);
          }
-
-        $filename = tempnam('', '').".csv";
-        $heading=array('Amazon Order','ASIN','Price','Quantity','Order Date', 'Order Status','Buyer Name');
-        $fp = fopen($filename, 'w');
-        fputcsv($fp, $heading);
-        foreach ($results as $result) {
-            fputcsv($fp, (Array)$result);
-        }
-        fclose($fp);
 
         return response()->download($filename);
     }
