@@ -79,21 +79,10 @@ class UsersController extends Controller
      */
     public function postSms(Request $request)
     {
-        $validator = Validator::make(
-            array(
-                'asin' => $request->get('asin'),
-                'contact' => $request->get('contact'),
-            ),
-            array(
-                'asin' => 'required',
-                'contact' => 'required',
-            )
-        );
-
-        if ($validator->fails()) {
-            Session::flash('message', 'Please fill all fields');
-            return redirect('users/sms');
-        }
+        $this->validate($request, [
+            'asin' => 'required',
+            'contact' => 'required'
+        ]);
 
         try {
             $http = new Services_Twilio_TinyHttp(
@@ -106,10 +95,10 @@ class UsersController extends Controller
 
             $client = new Services_Twilio(env('TWILIO_SID'), env('TWILIO_TOKEN'), "2010-04-01", $http);
             $sms = $client->account->sms_messages->create("+12267741565", $request->get('contact'), "Welcome", array());
-            Session::flash('message2', 'Successfully Send SMS');
+            Session::flash('success', 'Successfully Send SMS');
             return redirect('users/sms');
         } catch (Exception $exception) {
-            Session::flash('message1', $exception->getMessage());
+            Session::flash('error', $exception->getMessage());
             return redirect('users/sms');
         }
     }
