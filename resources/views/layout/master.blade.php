@@ -33,8 +33,11 @@
             <span style="float:right;margin-top:10px; margin-right:10px;">{{ isset(Auth::user()->name) ? Auth::user()->name : Auth::user()->email }}</span>
         </div>
     </nav>
-    @if (Session::has('message'))
-        <div class="alert alert-danger">{{ Session::get('message') }}</div>
+    @if (Session::has('message1'))
+        <div class="alert alert-danger">{{ Session::get('message1') }}</div>
+    @endif
+    @if (Session::has('message2'))
+        <div class="alert alert-success">{{ Session::get('message2') }}</div>
     @endif
     @yield('content')
     @yield('show')
