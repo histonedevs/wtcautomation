@@ -110,16 +110,12 @@ class UsersController extends Controller
                 ))
             );
 
-            $sid = 'AC184281d4cbd89d7e0fac6e018e4d8200';
-            $token = '4396e5ab9328f2f2437448279398c93f';
-//            $phoneNumber = '+16092700536';
-            $client = new Services_Twilio($sid, $token, "2010-04-01", $http);
-            $sms = $client->account->sms_messages->create("+16092700536", "+923139560038", "Welcome", array());
+            $client = new Services_Twilio(env('TWILIO_SID'), env('TWILIO_TOKEN'), "2010-04-01", $http);
+            $sms = $client->account->sms_messages->create("+12267741565", $request->get('contact'), "Welcome", array());
 
         } catch (Exception $exception) {
             Session::flash('message', $exception->getMessage());
             return redirect('users/sms');
         }
-
     }
 }
