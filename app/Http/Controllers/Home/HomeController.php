@@ -16,5 +16,7 @@ use App;
 
 class HomeController extends Controller
 {
-
+    public function getIndex(){
+        return redirect('download');
+    }
 }
