@@ -94,7 +94,7 @@ class UsersController extends Controller
             );
 
             $client = new Services_Twilio(env('TWILIO_SID'), env('TWILIO_TOKEN'), "2010-04-01", $http);
-            $sms = $client->account->sms_messages->create("+12267741565", $request->get('contact'), "Welcome", array());
+            $sms = $client->account->sms_messages->create("+12267741565", $request->get('contact'), $request->get('asin'), array());
             Session::flash('success', 'Successfully Send SMS');
             return redirect('users/sms');
         } catch (Exception $exception) {
