@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>@yield('title')</title>
     <link rel="stylesheet" href="{{ URL::asset('assets/css/bootstrap.min.css') }}" type="text/css" />
-    <link rel="stylesheet" href="{{ URL::asset('assets/css/bootstrap-datetimepicker.min.css') }}" type="text/css"/>
+    {{--<link rel="stylesheet" href="{{ URL::asset('assets/css/bootstrap-datetimepicker.min.css') }}" type="text/css"/>--}}
     <link rel="stylesheet" href="{{ URL::asset('assets/css/jquery-ui.min.css') }}" type="text/css" />
     <link rel="stylesheet" href="{{ URL::asset('assets/css/jquery-ui.theme.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ URL::asset('assets/css/jquery-ui.structure.min.css') }}" type="text/css">
@@ -25,7 +25,7 @@
                             <li><a href="{{ url('users/index')  }}">Display All Users</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{url ('home')}}">Download</a></li>
+                    <li><a href="{{url ('download')}}">Download</a></li>
                     <li><a href="{{ url ('users/sms') }}">Send Sms</a></li>
                 </ul>
             </div>
@@ -47,7 +47,7 @@
 </body>
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/bootstrap.min.js') !!}
-{!! Html::script('assets/js/bootstrap-datetimepicker.js') !!}
+{{--{!! Html::script('assets/js/bootstrap-datetimepicker.js') !!}--}}
 {!! Html::script('assets/js/jquery-ui.js') !!}
 @yield('page-script');
 <script>
