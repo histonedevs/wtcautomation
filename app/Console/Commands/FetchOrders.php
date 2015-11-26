@@ -73,14 +73,14 @@ class FetchOrders extends Command
      * @throws \Exception
      */
     private function getMoreOrders($user){
-        $last_order_id = 0;
+        $last_updated_at = 0;
 
-        $last_order = SaleOrder::where('user_id', $user->id)->orderBy('unique_id', 'DESC')->take(1)->first();
-        if ($last_order) {
-            $last_order_id = $last_order->unique_id;
+        $last_update = SaleOrder::where('user_id', $user->id)->orderBy('updated_at', 'DESC')->take(1)->first();
+        if ($last_update) {
+            $last_updated_at = urlencode($last_update->updated_at);
         }
 
-        return $this->callAPI("orders/list/{$user->unique_id}/{$last_order_id}");
+        return $this->callAPI("orders/list/{$user->unique_id}/{$last_updated_at}");
     }
 
     /**
@@ -101,8 +101,8 @@ class FetchOrders extends Command
      *
      */
     private function getOrders(){
-        $users = Account::whereId(1)->get();
 
+        $users = Account::all();
         foreach ($users as $user) {
             $r = $this->getMoreOrders($user);
             while (count($r) > 0) {
@@ -113,12 +113,12 @@ class FetchOrders extends Command
                             $record->buyer->location_id = $location->id;
                         }
 
+                        $record->buyer->user_id = Account::whereUniqueId($record->buyer->user_id)->first()->id;
                         $buyer = $this->saveItem('App\Buyer', $record->buyer);
                         $record->buyer_id = $buyer->id;
                     }
 
                     $record->user_id = Account::whereUniqueId($record->user_id)->first()->id;
-
                     $sale = $this->saveItem('App\SaleOrder' , $record);
 
                     if($record->sale_order_items) {

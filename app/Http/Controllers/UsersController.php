@@ -12,7 +12,7 @@ use \Exception;
 use Services_Twilio;
 use Services_Twilio_TinyHttp;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\Validator;
+use \Validator;
 
 
 class UsersController extends Controller
@@ -79,27 +79,10 @@ class UsersController extends Controller
      */
     public function postSms(Request $request)
     {
-        $request = array(
-            'asin' => $request->get('asin'),
-            'contact' => $request->get('contact')
-        );
-
-        /*$validator = Validator::make(
-            array(
-                'asin' => $request->get('asin'),
-                'contact' => $request->get('contact'),
-            ),
-            array(
-                'asin' => 'required',
-                'contact' => 'required|min:4',
-            )
-        );
-
-        if ($validator->fails())
-        {
-            Session::flash('message', 'aaa');
-            return redirect('users/sms');
-        }*/
+        $this->validate($request, [
+            'asin' => 'required',
+            'contact' => 'required'
+        ]);
 
         try {
             $http = new Services_Twilio_TinyHttp(
@@ -110,16 +93,13 @@ class UsersController extends Controller
                 ))
             );
 
-            $sid = 'AC184281d4cbd89d7e0fac6e018e4d8200';
-            $token = '4396e5ab9328f2f2437448279398c93f';
-//            $phoneNumber = '+16092700536';
-            $client = new Services_Twilio($sid, $token, "2010-04-01", $http);
-            $sms = $client->account->sms_messages->create("+16092700536", "+923139560038", "Welcome", array());
-
+            $client = new Services_Twilio(env('TWILIO_SID'), env('TWILIO_TOKEN'), "2010-04-01", $http);
+            $sms = $client->account->sms_messages->create("+12267741565", $request->get('contact'), "Welcome", array());
+            Session::flash('success', 'Successfully Send SMS');
+            return redirect('users/sms');
         } catch (Exception $exception) {
-            Session::flash('message', $exception->getMessage());
+            Session::flash('error', $exception->getMessage());
             return redirect('users/sms');
         }
-
     }
 }
