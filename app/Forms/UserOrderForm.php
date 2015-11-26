@@ -10,15 +10,15 @@ class UserOrderForm extends Form
     {
 
         $this
-           ->add('users', 'select', [
-               'choices' => $this->getData('options'),
-               'empty_value' => 'Select Users',
-               'rules' => 'required'
-           ])
-            ->add('fromDate', 'text', ['rules'=>'required'
+            ->add('users', 'select', [
+                'choices' => $this->getData('options'),
+                'empty_value' => 'Select Users',
+                'rules' => 'required'
+            ], ['id' => 'users'])
+            ->add('fromDate', 'text', ['rules' => 'required'
 
             ])
-            ->add('toDate', 'text',['rules'=>'required'])
-            ->add('Download','submit',['label'=>'Download']);
+            ->add('toDate', 'text', ['rules' => 'required'])
+            ->add('Download', 'submit', ['label' => 'Download', 'attr' => ['class' => 'btn btn-default form-group col-md-2']]);
     }
 }
