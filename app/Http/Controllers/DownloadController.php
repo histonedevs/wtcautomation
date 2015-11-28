@@ -85,7 +85,7 @@ class DownloadController extends Controller
         $user = Input::get('user');
         $userParent = Account::find($user);
         $child_users = DB::table('accounts')
-            ->select('id', 'name')
+            ->select('id', 'name', 'account_title')
             ->where('parent_id', $user)
             ->get();
 
