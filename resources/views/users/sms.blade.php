@@ -26,10 +26,6 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="asin">ASIN</label>
-                    <input type="text" class="form-control" id="asin" name="asin" placeholder="Enter ASIN" >
-                </div>
-                <div class="form-group">
                     <label for="contact">Contact No.</label>
                     <input type="text" class="form-control" id="contact" name="contact" placeholder="Enter Contact No." >
                 </div>

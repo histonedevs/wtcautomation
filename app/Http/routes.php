@@ -15,6 +15,10 @@ Route::get('/', function () {
     return redirect("auth/login");
 });
 
+Route::get('/support/{user_id}/{asin}', function($user_id , $asin){
+    return "Hello there";
+});
+
 Route::controllers([
     'auth' => 'Auth\AuthController',
     'home' => 'Home\HomeController',

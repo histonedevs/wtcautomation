@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\GoogleUrl;
+use App\Api\Twilio;
+use App\Api\UrlShortenerApi;
 use App\Product;
 use Illuminate\Http\Request;
 
@@ -15,11 +18,15 @@ use Services_Twilio_TinyHttp;
 use Illuminate\Support\Facades\Session;
 use \Validator;
 use App\Account;
-use App\UrlShortenerApi;
 
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth");
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -48,8 +55,7 @@ class UsersController extends Controller
         return view('users.add_user');
     }
 
-    public function getDelete($id)
-    {
+    public function getDelete($id){
         User::find($id)->delete();
         return redirect('users/index');
     }
@@ -83,45 +89,23 @@ class UsersController extends Controller
      */
     public function postSms(Request $request)
     {
-
         $this->validate($request, [
-            'asin' => 'required',
-            'contact' => 'required'
+            'contact' => 'required',
+            'child_users' => 'required',
+            'products' => 'required'
         ]);
 
-        $parent_user_id = $request->get('users');
         $child_user_id = $request->get('child_users');
-        $product_id = $request->get('products');
-        $asin = $request->get('asin');
-        $url = url("users/landing/");
-        $url .= "/" . $parent_user_id . "/" . $child_user_id . "/" . $product_id . "/" . $asin;
+        $asin = Product::find($request->get('products'))->asin;
 
-        $short_url = new UrlShortenerApi();
-        $short_url->getGoogleURLAPI(env("API_KEY"));
-        $shortDWName = $short_url->getShorten($url);
+        $short_url = GoogleUrl::getShortURL(url("support/{$child_user_id}/{$asin}"));
 
         try {
-            $http = new Services_Twilio_TinyHttp(
-                'https://api.twilio.com',
-                array('curlopts' => array(
-                    CURLOPT_SSL_VERIFYPEER => true,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                ))
-            );
-
-            $client = new Services_Twilio(env('TWILIO_SID'), env('TWILIO_TOKEN'), "2010-04-01", $http);
-            $sms = $client->account->sms_messages->create("+12267741565", $request->get('contact'), $request->get('asin') . " " . $shortDWName, array());
+            Twilio::sendSMS($request->get('contact') , $short_url);
             Session::flash('success', 'Successfully Send SMS');
-            return redirect('users/sms');
         } catch (Exception $exception) {
             Session::flash('error', $exception->getMessage());
-            return redirect('users/sms');
         }
-    }
-
-    public function getLanding($parent_user, $child_user, $product, $asin)
-    {
-        $product = Product::find($product);
-        return view('users.landing', compact('product'));
+        return redirect('users/sms');
     }
 }

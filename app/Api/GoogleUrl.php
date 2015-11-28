@@ -6,13 +6,19 @@
  * Time: 7:05 PM
  */
 
-namespace App;
+namespace App\Api;
 
 
-class UrlShortenerApi
+class GoogleUrl
 {
-    public function getGoogleURLAPI($key, $apiURL = 'https://www.googleapis.com/urlshortener/v1/url')
-    {
+    public static function getShortURL($long_url){
+        $short_url = new GoogleUrl();
+        $short_url->getGoogleURLAPI(env("API_KEY"));
+        return $short_url->getShorten($long_url);
+    }
+
+
+    public function getGoogleURLAPI($key, $apiURL = 'https://www.googleapis.com/urlshortener/v1/url'){
         // Keep the API Url
         $this->apiURL = $apiURL.'?key='.$key;
     }

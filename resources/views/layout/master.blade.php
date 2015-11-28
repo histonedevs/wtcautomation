@@ -25,7 +25,7 @@
                             <li><a href="{{ url('users/index')  }}">Display All Users</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{url ('download')}}">Download</a></li>
+                    <li><a href="{{ url ('download')}}">Download</a></li>
                     <li><a href="{{ url ('users/sms') }}">Send Sms</a></li>
                 </ul>
             </div>
@@ -47,7 +47,7 @@
 </div>
 </body>
 <script type="text/javascript">
-    var APP_URL = {!! json_encode(url('/')) !!};
+    var APP_URL = '{{ url('/') }}';
 </script>
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/bootstrap.min.js') !!}

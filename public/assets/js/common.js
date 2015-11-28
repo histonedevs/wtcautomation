@@ -1,6 +1,5 @@
 $(document).on('change','#users',function(e){
     var user = $('#users').val();
-    console.log(APP_URL);
     $.ajax({
         url: APP_URL +"/download/child-user",
         type: "get",
