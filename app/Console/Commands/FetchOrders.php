@@ -90,6 +90,7 @@ class FetchOrders extends Command
         $last_update = SaleOrder::where('user_id', $user->id)->orderBy('last_updated_at', 'DESC')->take(1)->first();
         if ($last_update) {
             $last_updated_at = $last_update->last_updated_at->timestamp;
+            print "Will get after : ".$last_update->last_updated_at->format('c')."\n";
         }
 
         return $this->callAPI("orders/list/{$user->unique_id}/{$last_updated_at}");
