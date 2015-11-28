@@ -44,18 +44,18 @@ class DownloadController extends Controller
             ->where('so.updated_at', '<=', $toDate)
             ->get();
 
-        if ($results) {
+        $filename = tempnam('', '') . ".csv";
+        $heading = array('# of Orders', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Postal Code', 'Country', 'Phone', 'Amazon Email', 'Amazon #', 'Sale Date', 'Product', 'Price', 'Asin');
+        $fp = fopen($filename, 'w');
+        fputcsv($fp, $heading);
 
-            $filename = tempnam('', '') . ".csv";
-            $heading = array('# of Orders', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Postal Code', 'Country', 'Phone', 'Amazon Email', 'Amazon #', 'Sale Date', 'Product', 'Price', 'Asin');
-            $fp = fopen($filename, 'w');
-            fputcsv($fp, $heading);
+        if ($results) {
             foreach ($results as $result) {
                 fputcsv($fp, (Array)$result);
             }
-            fclose($fp);
         }
 
+        fclose($fp);
         return response()->download($filename);
     }
 

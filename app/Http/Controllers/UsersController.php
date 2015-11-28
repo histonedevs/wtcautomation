@@ -93,14 +93,13 @@ class UsersController extends Controller
         $child_user_id = $request->get('child_users');
         $product_id = $request->get('products');
         $asin = $request->get('asin');
-        $this->getLanding($parent_user_id, $child_user_id, $product_id, $asin);
         $url = url("users/landing/");
         $url .= "/" . $parent_user_id . "/" . $child_user_id . "/" . $product_id . "/" . $asin;
 
         $short_url = new UrlShortenerApi();
         $short_url->getGoogleURLAPI(env("API_KEY"));
         $shortDWName = $short_url->getShorten($url);
-//        echo $shortDWName;
+
         try {
             $http = new Services_Twilio_TinyHttp(
                 'https://api.twilio.com',
