@@ -98,7 +98,10 @@ class UsersController extends Controller
         $child_user_id = $request->get('child_users');
         $asin = Product::find($request->get('products'))->asin;
 
-        $short_url = GoogleUrl::getShortURL(url("support/{$child_user_id}/{$asin}"));
+        $long_url = url("support/{$child_user_id}/{$asin}");
+        $short_url = GoogleUrl::getShortURL($long_url);
+
+        dd($long_url , $short_url);
 
         try {
             Twilio::sendSMS($request->get('contact') , $short_url);
