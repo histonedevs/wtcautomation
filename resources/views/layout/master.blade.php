@@ -26,7 +26,7 @@
                         </ul>
                     </li>
                     <li><a href="{{ url ('download')}}">Download</a></li>
-                    <li><a href="{{ url ('users/sms') }}">Send Sms</a></li>
+                    <li><a href="{{ url ('sms') }}">Send Sms</a></li>
                 </ul>
             </div>
             <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right" style="margin-top:5px;">Sign Out</a>

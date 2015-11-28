@@ -13,7 +13,7 @@
 
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
-            <form role="form" method="POST" action="{{ url('users/sms') }}" >
+            <form role="form" method="POST" action="{{ url('sms') }}" >
                 {!! csrf_field() !!}
                 <h3>Send SMS</h3>
                 <div class="form-group">
