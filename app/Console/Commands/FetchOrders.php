@@ -11,8 +11,18 @@ use App\SaleOrder;
 use App\SaleOrderItem;
 use App\Product;
 
+define('INVALID_AUTH' , 1);
+define('INVALID_ARGUMENT' , 2);
+define('INVALID_USER' , 3);
+
 class FetchOrders extends Command
 {
+    protected static $error_codes = [
+        'INVALID_AUTH' => INVALID_AUTH,
+        'INVALID_ARGUMENT' => INVALID_ARGUMENT,
+        'INVALID_USER' => INVALID_USER,
+    ];
+
     /**
      * The name and signature of the console command.
      *
@@ -30,7 +40,6 @@ class FetchOrders extends Command
     /**
      * Create a new command instance.
      *
-     * @return void
      */
     public function __construct()
     {
@@ -40,7 +49,7 @@ class FetchOrders extends Command
 
     /**
      * @param $url
-     * @return string
+     * @return array
      * @throws \Exception
      */
     private function callAPI($url){
@@ -48,6 +57,7 @@ class FetchOrders extends Command
         $curl->setConnectTimeout(3600);
 
         $api_url = env("API_URL")."/api/{$url}";
+
         $r = $curl->get($api_url,
             array(
                 'email' =>  env('API_USERNAME'),
@@ -55,8 +65,10 @@ class FetchOrders extends Command
             )
         );
 
+        print $api_url."\n";
+
         if(@isset($r->error)){
-            throw new \Exception($r->error);
+            throw new \Exception($r->error, self::$error_codes[$r->error_code]);
         }
 
         if(!$r && !is_array($r)){
@@ -69,15 +81,15 @@ class FetchOrders extends Command
 
     /**
      * @param $user
-     * @return string
+     * @return array
      * @throws \Exception
      */
     private function getMoreOrders($user){
         $last_updated_at = 0;
 
-        $last_update = SaleOrder::where('user_id', $user->id)->orderBy('updated_at', 'DESC')->take(1)->first();
+        $last_update = SaleOrder::where('user_id', $user->id)->orderBy('last_updated_at', 'DESC')->take(1)->first();
         if ($last_update) {
-            $last_updated_at = urlencode($last_update->updated_at);
+            $last_updated_at = $last_update->last_updated_at->timestamp;
         }
 
         return $this->callAPI("orders/list/{$user->unique_id}/{$last_updated_at}");
@@ -87,12 +99,11 @@ class FetchOrders extends Command
      * @throws \Exception
      */
     private function getUsers(){
-        $r = $this->callAPI('users');
-        foreach ($r as $record) {
+        foreach ($this->callAPI('users') as $record) {
             $account = $this->saveItem('App\Account',$record);
             foreach ($record->children as $row) {
                 $row->parent_id = $account->id;
-                $child = $this->saveItem('App\Account',$row);
+                $this->saveItem('App\Account',$row);
             }
         }
     }
@@ -101,40 +112,47 @@ class FetchOrders extends Command
      *
      */
     private function getOrders(){
-
         $users = Account::all();
         foreach ($users as $user) {
-            $r = $this->getMoreOrders($user);
-            while (count($r) > 0) {
-                foreach ($r as $record) {
-                    if($record->buyer_id && $record->buyer) {
-                        if($record->buyer->location) {
-                            $location = $this->saveItem('App\Location', $record->buyer->location);
-                            $record->buyer->location_id = $location->id;
-                        }
-
-                        $record->buyer->user_id = Account::whereUniqueId($record->buyer->user_id)->first()->id;
-                        $buyer = $this->saveItem('App\Buyer', $record->buyer);
-                        $record->buyer_id = $buyer->id;
-                    }
-
-                    $record->user_id = Account::whereUniqueId($record->user_id)->first()->id;
-                    $sale = $this->saveItem('App\SaleOrder' , $record);
-
-                    if($record->sale_order_items) {
-                        foreach ($record->sale_order_items as $row) {
-                            if($row->product) {
-                                $row->product->user_id = $sale->user_id;
-                                $product = $this->saveItem('App\Product', $row->product);
-                                $row->product_id = $product->id;
-                            }
-                            $row->sale_order_id = $sale->id;
-                            $sale_order_item = $this->saveItem('App\SaleOrderItem', $row);
-                        }
-                    }
-                }
-
+            try {
                 $r = $this->getMoreOrders($user);
+                while (count($r) > 0) {
+                    foreach ($r as $record) {
+                        if ($record->buyer_id && $record->buyer) {
+                            if ($record->buyer->location) {
+                                $location = $this->saveItem('App\Location', $record->buyer->location);
+                                $record->buyer->location_id = $location->id;
+                            }
+
+                            $record->buyer->user_id = Account::whereUniqueId($record->buyer->user_id)->first()->id;
+                            $buyer = $this->saveItem('App\Buyer', $record->buyer);
+                            $record->buyer_id = $buyer->id;
+                        }
+
+                        $record->user_id = Account::whereUniqueId($record->user_id)->first()->id;
+                        $sale = $this->saveItem('App\SaleOrder', $record);
+
+                        if ($record->sale_order_items) {
+                            foreach ($record->sale_order_items as $row) {
+                                if ($row->product) {
+                                    $row->product->user_id = $sale->user_id;
+                                    $product = $this->saveItem('App\Product', $row->product);
+                                    $row->product_id = $product->id;
+                                }
+                                $row->sale_order_id = $sale->id;
+                                $sale_order_item = $this->saveItem('App\SaleOrderItem', $row);
+                            }
+                        }
+                    }
+
+                    $r = $this->getMoreOrders($user);
+                }
+            }catch (\Exception $ex){
+                if($ex->getCode() == INVALID_USER){
+                    continue;
+                }else{
+                    throw $ex;
+                }
             }
         }
     }
