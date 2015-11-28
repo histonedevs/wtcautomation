@@ -96,7 +96,7 @@ class DownloadController extends Controller
     {
         $child_user = Input::get('child_user');
         $products = DB::table('products')
-            ->select('id', 'title')
+            ->select('id', 'title', 'asin')
             ->where('user_id', $child_user)
             ->get();
 
