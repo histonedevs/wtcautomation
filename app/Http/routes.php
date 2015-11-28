@@ -23,5 +23,6 @@ Route::controllers([
     'auth' => 'Auth\AuthController',
     'home' => 'Home\HomeController',
     'users' => 'UsersController',
-    'download' => 'DownloadController'
+    'download' => 'DownloadController',
+    'sms' => 'SMSController',
 ]);

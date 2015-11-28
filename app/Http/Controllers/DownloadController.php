@@ -15,19 +15,30 @@ use \Input;
 
 class DownloadController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth");
+    }
+
     public function getIndex(FormBuilder $formBuilder)
     {
-        $form = $this->form($formBuilder);
+        $users = Account::whereParentId(NULL)->get();
+        $options = array();
+        foreach ($users as $user) {
+            $options[$user->id] = $user->name;
+        }
+
+        $form = $formBuilder->create('App\Forms\UserOrderForm', [], ['options' => $options]);
         return view('users.orders', ['form' => $form]);
     }
 
-    public function postDownload(Request $request, FormBuilder $formBuilder)
+    public function postIndex(Request $request, FormBuilder $formBuilder)
     {
         $user = $request->get('users');
         $child_user = $request->get('child_users');
         $product = $request->get('products');
-        $fromDate = Carbon::parse($request->get('fromDate'));
-        $toDate = Carbon::parse($request->get('toDate'));
+        $fromDate = Carbon::parse($request->get('fromDate'))->startOfDay();
+        $toDate = Carbon::parse($request->get('toDate'))->endOfDay();
 
         $results = DB::table('sale_order_items as soi')
             ->select([
@@ -39,8 +50,8 @@ class DownloadController extends Controller
             ->join('products as p', 'soi.product_id', '=', 'p.id')
             ->where('so.user_id', $child_user)
             ->where('soi.product_id', $product)
-            ->where('so.created_at', '>=', $fromDate)
-            ->where('so.updated_at', '<=', $toDate)
+            ->where('so.purchased_at', '>=', $fromDate)
+            ->where('so.purchased_at', '<=', $toDate)
             ->get();
 
         $filename = tempnam('', '') . ".csv";
@@ -56,50 +67,5 @@ class DownloadController extends Controller
 
         fclose($fp);
         return response()->download($filename);
-    }
-
-    public function form($formBuilder)
-    {
-        $users = Account::whereParentId(NULL)->get();
-        $options = array();
-        foreach ($users as $user) {
-            $options[$user->id] = $user->name;
-        }
-
-        $form = $formBuilder->create('App\Forms\UserOrderForm',
-            [
-                'method' => 'POST',
-                'url' => url("download/download"),
-                'class' => 'form-horizontal',
-                'role' => 'form'
-            ], [
-                'options' => $options
-            ]
-        );
-
-        return $form;
-    }
-
-    public function getChildUser()
-    {
-        $user = Input::get('user');
-        $userParent = Account::find($user);
-        $child_users = DB::table('accounts')
-            ->select('id', 'name', 'account_title')
-            ->where('parent_id', $user)
-            ->get();
-
-        return view('users.select_childs', compact('child_users', 'userParent'));
-    }
-
-    public function getProduct()
-    {
-        $child_user = Input::get('child_user');
-        $products = DB::table('products')
-            ->select('id', 'title', 'asin')
-            ->where('user_id', $child_user)
-            ->get();
-
-        return view('users.select_products', compact('products'));
     }
 }

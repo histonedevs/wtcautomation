@@ -13,6 +13,8 @@ use App\Http\Controllers\Controller;
 use Hash;
 use App\User;
 use \Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Input;
 use Services_Twilio;
 use Services_Twilio_TinyHttp;
 use Illuminate\Support\Facades\Session;
@@ -77,38 +79,26 @@ class UsersController extends Controller
         return redirect('users/index');
     }
 
-    public function getSms()
+    public function getChildUser()
     {
-        $users = Account::whereParentId(NULL)->get();
-        return view('users.sms', compact('users'));
+        $user = Input::get('user');
+        $userParent = Account::find($user);
+        $child_users = DB::table('accounts')
+            ->select('id', 'name', 'account_title')
+            ->where('parent_id', $user)
+            ->get();
+
+        return view('users.select_childs', compact('child_users', 'userParent'));
     }
 
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    public function postSms(Request $request)
+    public function getProduct()
     {
-        $this->validate($request, [
-            'contact' => 'required',
-            'child_users' => 'required',
-            'products' => 'required'
-        ]);
+        $child_user = Input::get('child_user');
+        $products = DB::table('products')
+            ->select('id', 'title', 'asin')
+            ->where('user_id', $child_user)
+            ->get();
 
-        $child_user_id = $request->get('child_users');
-        $asin = Product::find($request->get('products'))->asin;
-
-        $long_url = url("support/{$child_user_id}/{$asin}");
-        $short_url = GoogleUrl::getShortURL($long_url);
-
-        $short_url = ($short_url)?$short_url: $long_url;
-
-        try {
-            Twilio::sendSMS($request->get('contact') , $short_url);
-            Session::flash('success', 'Successfully Send SMS');
-        } catch (Exception $exception) {
-            Session::flash('error', $exception->getMessage());
-        }
-        return redirect('users/sms');
+        return view('users.select_products', compact('products'));
     }
 }

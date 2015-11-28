@@ -6,10 +6,21 @@ use Kris\LaravelFormBuilder\Form;
 
 class UserOrderForm extends Form
 {
+    /**
+     * Form options
+     *
+     * @var array
+     */
+    protected $formOptions = [
+        'method' => 'POST',
+        'class' => 'form-horizontal',
+        'role' => 'form',
+    ];
+
     public function buildForm()
     {
-
         $this
+            ->setUrl(url("download"))
             ->add('users', 'select', [
                 'choices' => $this->getData('options'),
                 'empty_value' => 'Select Users',
