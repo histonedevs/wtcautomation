@@ -4,7 +4,7 @@
         <option>Select Child Users</option>
         <option value="{{ $userParent->id }}">{{ $userParent->name }}</option>
         @foreach($child_users as $child_user)
-            <option value='{{$child_user->id}}'> {{$child_user->name}} </option>
+            <option value='{{$child_user->id}}'> {{$child_user->account_title}} </option>
         @endforeach
     </select>
 </div>
