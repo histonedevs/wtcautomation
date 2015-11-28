@@ -32,13 +32,12 @@ class DownloadController extends Controller
         $results = DB::table('sale_order_items as soi')
             ->select([
                 'b.orders_count', 'b.first_name', 'b.last_name', 'b.address1', 'b.city', 'b.state', 'b.zip', 'l.country', 'b.phone', 'b.email', 'so.amazon_order_id', 'so.purchased_at', 'p.title', 'soi.item_price as price', 'p.asin'
-
             ])
             ->join('sale_orders as so', 'soi.sale_order_id', '=', 'so.id')
             ->leftJoin('buyers as b', 'b.id', '=', 'so.buyer_id')
             ->leftJoin('locations as l', 'l.id', '=', 'b.location_id')
             ->join('products as p', 'soi.product_id', '=', 'p.id')
-            ->where('so.user_id', $user)
+            ->where('so.user_id', $child_user)
             ->where('soi.product_id', $product)
             ->where('so.created_at', '>=', $fromDate)
             ->where('so.updated_at', '<=', $toDate)
