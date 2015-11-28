@@ -42,7 +42,7 @@ class GoogleUrl
         $ch = curl_init();
         // If we're shortening a URL...
         if($shorten) {
-            curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false );
             curl_setopt($ch,CURLOPT_URL,$this->apiURL);
             curl_setopt($ch,CURLOPT_POST,1);
             curl_setopt($ch,CURLOPT_POSTFIELDS,json_encode(array("longUrl"=>$url)));
