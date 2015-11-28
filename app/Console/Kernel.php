@@ -26,6 +26,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('api:fetch_orders')->hourly()->withoutOverlapping();
+        $schedule->command('api:fetch_orders')
+            ->hourly()
+            ->appendOutputTo(storage_path('logs/cron.log'))
+            ->withoutOverlapping();
     }
 }
