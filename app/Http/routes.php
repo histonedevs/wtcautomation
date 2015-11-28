@@ -12,7 +12,11 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect("auth/login");
+});
+
+Route::get('/support/{user_id}/{asin}', function($user_id , $asin){
+    return "Hello there";
 });
 
 Route::controllers([

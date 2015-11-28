@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Api\GoogleUrl;
+use App\Api\Twilio;
+use App\Api\UrlShortenerApi;
+use App\Product;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -13,10 +17,16 @@ use Services_Twilio;
 use Services_Twilio_TinyHttp;
 use Illuminate\Support\Facades\Session;
 use \Validator;
+use App\Account;
 
 
 class UsersController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth");
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -45,8 +55,7 @@ class UsersController extends Controller
         return view('users.add_user');
     }
 
-    public function getDelete($id)
-    {
+    public function getDelete($id){
         User::find($id)->delete();
         return redirect('users/index');
     }
@@ -70,7 +79,8 @@ class UsersController extends Controller
 
     public function getSms()
     {
-        return view('users.sms');
+        $users = Account::whereParentId(NULL)->get();
+        return view('users.sms', compact('users'));
     }
 
     /**
@@ -80,26 +90,22 @@ class UsersController extends Controller
     public function postSms(Request $request)
     {
         $this->validate($request, [
-            'asin' => 'required',
-            'contact' => 'required'
+            'contact' => 'required',
+            'child_users' => 'required',
+            'products' => 'required'
         ]);
 
-        try {
-            $http = new Services_Twilio_TinyHttp(
-                'https://api.twilio.com',
-                array('curlopts' => array(
-                    CURLOPT_SSL_VERIFYPEER => true,
-                    CURLOPT_SSL_VERIFYHOST => 0,
-                ))
-            );
+        $child_user_id = $request->get('child_users');
+        $asin = Product::find($request->get('products'))->asin;
 
-            $client = new Services_Twilio(env('TWILIO_SID'), env('TWILIO_TOKEN'), "2010-04-01", $http);
-            $sms = $client->account->sms_messages->create("+12267741565", $request->get('contact'), $request->get('asin'), array());
+        $short_url = GoogleUrl::getShortURL(url("support/{$child_user_id}/{$asin}"));
+
+        try {
+            Twilio::sendSMS($request->get('contact') , $short_url);
             Session::flash('success', 'Successfully Send SMS');
-            return redirect('users/sms');
         } catch (Exception $exception) {
             Session::flash('error', $exception->getMessage());
-            return redirect('users/sms');
         }
+        return redirect('users/sms');
     }
 }

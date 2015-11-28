@@ -25,7 +25,7 @@
                             <li><a href="{{ url('users/index')  }}">Display All Users</a></li>
                         </ul>
                     </li>
-                    <li><a href="{{url ('download')}}">Download</a></li>
+                    <li><a href="{{ url ('download')}}">Download</a></li>
                     <li><a href="{{ url ('users/sms') }}">Send Sms</a></li>
                 </ul>
             </div>
@@ -38,13 +38,17 @@
         <div class="alert alert-danger">{{ Session::get('error') }}</div>
     @endif
     @if (Session::has('success'))
-        <div class="alert alert-success">{{ Session::get('success') }}</div>
+        <div class="alert alert-success">
+            {{ Session::get('success') }}</div>
     @endif
 
     @yield('content')
     @yield('show')
 </div>
 </body>
+<script type="text/javascript">
+    var APP_URL = '{{ url('/') }}';
+</script>
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/bootstrap.min.js') !!}
 {{--{!! Html::script('assets/js/bootstrap-datetimepicker.js') !!}--}}
