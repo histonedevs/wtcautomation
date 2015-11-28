@@ -16,7 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/support/{user_id}/{asin}', function($user_id , $asin){
-    return "Hello there";
+    return view('landing', compact('asin' , 'user_id'));
 });
 
 Route::controllers([
