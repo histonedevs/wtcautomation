@@ -21,12 +21,26 @@
                     <li>
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Users<span class="caret"></span></a>
                         <ul class="dropdown-menu">
+                            <li><a href="{{ url('users')  }}">All Users</a></li>
                             <li><a href="{{ url('users/add') }}">Add User</a></li>
-                            <li><a href="{{ url('users/index')  }}">Display All Users</a></li>
                         </ul>
                     </li>
                     <li><a href="{{ url ('download')}}">Download</a></li>
                     <li><a href="{{ url ('sms') }}">Send Sms</a></li>
+                    <li>
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Campaigns<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url ('campaigns') }}">All Campaigns</a></li>
+                            <li><a href="{{ url ('campaigns/add') }}">Add Campaign</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Accounts<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url ('accounts') }}">All Accounts</a></li>
+                            <li><a href="{{ url ('accounts/csv') }}">Update Accounts</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right" style="margin-top:5px;">Sign Out</a>
@@ -45,22 +59,14 @@
     @yield('content')
     @yield('show')
 </div>
-</body>
-<script type="text/javascript">
-    var APP_URL = '{{ url('/') }}';
-</script>
+
 {!! Html::script('assets/js/jquery.js') !!}
 {!! Html::script('assets/js/bootstrap.min.js') !!}
-{{--{!! Html::script('assets/js/bootstrap-datetimepicker.js') !!}--}}
 {!! Html::script('assets/js/jquery-ui.js') !!}
-@yield('page-script');
 <script>
-    $(document).ready(function () {
-        var url = window.location;
-        $('ul.nav a[href="' + url + '"]').parent().addClass('active');
-        $('ul.nav a').filter(function () {
-            return this.href == url;
-        }).parent().addClass('active').parent().parent().addClass('active');
-    });
+    var APP_URL = '{{ url('/') }}';
+    $('ul.nav a[href="' + window.location + '"]').parents("li").addClass('active');
 </script>
+@yield('page-script')
+</body>
 </html>
