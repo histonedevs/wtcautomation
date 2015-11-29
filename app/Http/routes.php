@@ -25,4 +25,6 @@ Route::controllers([
     'users' => 'UsersController',
     'download' => 'DownloadController',
     'sms' => 'SMSController',
+    'campaigns' => 'CampaignController',
+    'accounts' => 'AccountController'
 ]);
