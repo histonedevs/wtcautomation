@@ -16,7 +16,7 @@ class AddBrandingFieldsToAccounts extends Migration
             $table->string("company_name")->nullable();
             $table->string("contact_person")->nullable();
             $table->string("website")->nullable();
-            $table->string("log")->nullable();
+            $table->string("logo")->nullable();
         });
     }
 
@@ -31,7 +31,7 @@ class AddBrandingFieldsToAccounts extends Migration
             $table->dropColumn("company_name");
             $table->dropColumn("contact_person");
             $table->dropColumn("website");
-            $table->dropColumn("log");
+            $table->dropColumn("logo");
         });
     }
 }
