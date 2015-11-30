@@ -152,6 +152,7 @@ class FetchOrders extends Command
                 if($ex->getCode() == INVALID_USER){
                     continue;
                 }else{
+                    print $ex->getTraceAsString();
                     throw $ex;
                 }
             }

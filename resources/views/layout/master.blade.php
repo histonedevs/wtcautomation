@@ -30,6 +30,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url ('campaigns') }}">All Campaigns</a></li>
                             <li><a href="{{ url ('campaigns/add') }}">Add Campaign</a></li>
+                            <li><a href="{{ url ('campaigns/import-csv') }}">Import Campaign</a></li>
                         </ul>
                     </li>
                     <li>
