@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use DB;
+use Datatables;
+use yajra\Datatables\Html\Builder;
 
 class CampaignController extends Controller
 {
@@ -14,8 +17,19 @@ class CampaignController extends Controller
         $this->middleware("auth");
     }
 
-    public function getIndex(){
-        return view('campaigns.index', []);
+    public function getIndex(Request $request, Builder $htmlBuilder){
+        $columns = [
+            make_column('campaign_name', 'campaigns.name as campaign_name', 'Campaign Name', 'text'),
+        ];
+
+        $base_query = DB::table('campaigns')->select(['campaigns.name as campaign_name']);
+
+        if($this->isAjax($request)){
+            return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
+        }else{
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns'));
+            return view('campaigns.index', compact('data_table'));
+        }
     }
 
     public function getAdd(){
