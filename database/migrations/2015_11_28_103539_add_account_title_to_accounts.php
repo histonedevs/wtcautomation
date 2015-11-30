@@ -13,7 +13,7 @@ class AddAccountTitleToAccounts extends Migration
     public function up()
     {
         Schema::table('accounts', function (Blueprint $table) {
-            $table->string("account_title");
+            $table->string("account_title")->nullable();
         });
     }
 
