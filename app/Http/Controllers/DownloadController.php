@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Campaign;
 use App\SaleOrder;
 use Auth;
 use Carbon\Carbon;
@@ -20,16 +21,50 @@ class DownloadController extends Controller
         $this->middleware("auth");
     }
 
-    public function getIndex(FormBuilder $formBuilder)
+    public function getIndex(Request $request)
     {
-        $users = Account::whereParentId(NULL)->get();
-        $options = array();
-        foreach ($users as $user) {
-            $options[$user->id] = $user->name;
+        $this->validate($request, [
+            'campaign_id' => 'required',
+            'dateFrom' => 'required',
+            'dateTo' => 'required'
+        ]);
+
+        try {
+            $fromDate = Carbon::parse($request->get('dateFrom'));
+            $toDate = Carbon::parse($request->get('dateTo'));
+        }catch (\Exception $ex){
+            return $ex->getMessage();
         }
 
-        $form = $formBuilder->create('App\Forms\UserOrderForm', [], ['options' => $options]);
-        return view('users.orders', ['form' => $form]);
+        $campaign = Campaign::find($request->campaign_id);
+
+        $results = DB::table('sale_order_items as soi')
+            ->select([
+                'b.orders_count', 'b.first_name', 'b.last_name', 'b.address1', 'b.city', 'b.state', 'b.zip', 'l.country', 'b.phone', 'b.email', 'so.amazon_order_id', 'so.purchased_at', 'p.title', 'soi.item_price as price', 'p.asin'
+            ])
+            ->join('sale_orders as so', 'soi.sale_order_id', '=', 'so.id')
+            ->leftJoin('buyers as b', 'b.id', '=', 'so.buyer_id')
+            ->leftJoin('locations as l', 'l.id', '=', 'b.location_id')
+            ->join('products as p', 'soi.product_id', '=', 'p.id')
+            ->where('soi.product_id', $campaign->product_id)
+            ->where('so.purchased_at', '>=', $fromDate)
+            ->where('so.purchased_at', '<=', $toDate)
+            ->get();
+
+        $filename = tempnam('', '') . ".csv";
+        $heading = array('# of Orders', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Postal Code', 'Country', 'Phone', 'Amazon Email', 'Amazon #', 'Sale Date', 'Product', 'Price', 'Asin');
+
+        $fp = fopen($filename, 'w');
+        fputcsv($fp, $heading);
+
+        if ($results) {
+            foreach ($results as $result) {
+                fputcsv($fp, (Array)$result);
+            }
+        }
+
+        fclose($fp);
+        return response()->download($filename);
     }
 
     public function postIndex(Request $request, FormBuilder $formBuilder)
