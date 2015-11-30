@@ -9,9 +9,9 @@ class EditAccountForm extends Form
     public function buildForm()
     {
         $this
-            ->add('company_name')
-            ->add('contact_person')
-            ->add('website');
+            ->add('company_name', 'text', ['rules' => 'required'])
+            ->add('contact_person', 'text', ['rules' => 'required'])
+            ->add('website', 'text', ['rules' => 'required']);
 
         if($model = $this->getModel()){
             if($model->logo) {
