@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Campaign;
+use App\Product;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -38,11 +40,50 @@ class CampaignController extends Controller
         }
     }
 
-    public function getAdd(){
-        return view('campaigns.form', []);
+    public function getAdd(Request $request, Builder $htmlBuilder){
+        $columns = [
+            make_column('asin' , 'products.asin', 'ASIN', 'text'),
+            make_column('product_title', 'products.title', 'Product Name' , 'text'),
+            make_column('company_name', 'accounts.company_name', 'Company', 'text'),
+            make_column('campaign_name', 'campaigns.name', 'Campaign Name', 'text', [], function($record){
+                if($record->campaign_name) {
+                    return $record->campaign_name;
+                }
+                return '<a class="btn btn-primary createCampBtn" href="#" product_id="'.$record->id.'">Create New</a>';
+            })
+        ];
+
+        $base_query = DB::table('products')->select(
+            ['campaigns.name as campaign_name', 'products.id', 'products.title as product_title', 'products.asin', 'accounts.company_name']
+        )->leftJoin('campaigns', 'campaigns.product_id' , '=' , 'products.id')
+        ->join('accounts', 'products.user_id' , '=', 'accounts.id')
+        ;
+
+        if($this->isAjax($request)){
+            return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
+        }else{
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns/add'));
+            return view('campaigns.add', compact('data_table'));
+        }
     }
 
-    public function getEdit($campaign_id){
-        return view('campaigns.form', []);
+    public function postAdd(Request $request){
+        $this->validate($request, [
+            'product_id' => 'required',
+            'campName' => 'required',
+        ]);
+
+        $product = Product::find($request->get('product_id'));
+        if(!$product) return "Product not found";
+
+        if($product->campaign) return "Product has already a campaign";
+
+        Campaign::create([
+            "name" => $request->get('campName'),
+            'user_id' => $product->user_id,
+            'product_id' => $product->id
+        ]);
+
+        return "ok";
     }
 }
