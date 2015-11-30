@@ -24,6 +24,8 @@ class AuthController extends Controller
 
     use AuthenticatesAndRegistersUsers, ThrottlesLogins;
 
+    public  $redirectTo = "/campaigns";
+
     /**
      * Create a new authentication controller instance.
      *
@@ -63,14 +65,4 @@ class AuthController extends Controller
             'password' => bcrypt($data['password']),
         ]);
     }
-
-    public function getLogout()
-    {
-        Auth::logout();
-        return redirect('auth/login');
-
-    }
-
-
-
 }
