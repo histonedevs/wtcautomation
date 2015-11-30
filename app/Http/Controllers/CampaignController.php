@@ -19,10 +19,16 @@ class CampaignController extends Controller
 
     public function getIndex(Request $request, Builder $htmlBuilder){
         $columns = [
-            make_column('campaign_name', 'campaigns.name as campaign_name', 'Campaign Name', 'text'),
+            make_column('campaign_name', 'campaigns.name', 'Campaign Name', 'text'),
+            make_column('product_title', 'products.title', 'Product Name' , 'text'),
+            make_column('asin' , 'products.asin', 'ASIN', 'text'),
+            make_column('sms', null, '', null, [], '<a class="btn btn-primary sendSmsBtn" href="#" campaign_id="{{$id}}">Send SMS</a>', null, '0px', null, false),
+            make_column('download', null, '', null, [], '<a class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Download</a>', null, '0px', null, false)
         ];
 
-        $base_query = DB::table('campaigns')->select(['campaigns.name as campaign_name']);
+        $base_query = DB::table('campaigns')->select(
+            ['campaigns.name as campaign_name', 'campaigns.id', 'products.title as product_title', 'products.asin']
+        )->join('products', 'campaigns.product_id' , '=' , 'products.id');
 
         if($this->isAjax($request)){
             return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
