@@ -19,10 +19,14 @@ class AccountController extends Controller
     }
 
     public function getCsv(){
-        return view('accounts.form', []);
+        return view('accounts.csv', []);
     }
 
-    public function getEdit($campaign_id){
+    public function postCSV(Request $request){
+        //save
+    }
+
+    public function getEdit($account_id){
         return view('accounts.form', []);
     }
 }
