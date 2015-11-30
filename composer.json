@@ -13,7 +13,7 @@
         "aloha/twilio": "^2.0",
         "predis/predis" : "*",
         "yajra/laravel-datatables-oracle": "~5.0",
-        "laracasts/flash": "^1.3"
+        "laracasts/flash": "^1.3",
         "predis/predis" : "^1.0"
     },
     "require-dev": {
