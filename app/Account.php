@@ -13,4 +13,16 @@ class Account extends Model
     {
         return $this->hasMany('App\SaleOrder');
     }
+
+    public function parent(){
+        return $this->belongsTo('App\Models\User', 'parent_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function children(){
+        return $this->hasMany('App\Models\User', 'parent_id');
+    }
+
 }
