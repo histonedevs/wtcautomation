@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Company;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Account;
 use DB;
+use App\UserCompany;
 
 class AccountController extends Controller
 {
@@ -43,8 +45,25 @@ class AccountController extends Controller
         //save
     }
 
-    public function getEdit($account_id)
+    public function getEdit(Request $request,$account_id)
     {
-        return view('accounts.form', []);
+
+        return view('accounts.form',compact('account_id'));
+    }
+
+    public function postEdit(Request $request,$account_id){
+
+         $this->validate($request, [
+            'company_name' => 'required',
+            'logo' => 'required'
+        ]);
+        if ($request->hasFile('logo')) {
+            $file = $request->file('logo');
+            $filename = time().'.'.$file->getClientOriginalExtension();
+            $file->move("uploads", $filename);
+            $request['logo'] = $filename;
+        }
+//          $company=UserCompany::find(1);
+//          UserCompany::updateOrCreate($request);
     }
 }

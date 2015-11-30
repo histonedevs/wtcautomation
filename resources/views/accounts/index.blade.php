@@ -21,7 +21,7 @@
                <td>{{ $parent_user->last_name }}</td>
                <td>{{ $parent_user->email }}</td>
                <td>
-                   <a href="#" class="btn btn-warning">Edit</a>
+                   <a href="{{url('accounts/edit/1')}}" class="btn btn-warning">Edit</a>
                </td>
 
            </tr>
