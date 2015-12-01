@@ -34,11 +34,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Accounts<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url ('accounts') }}">All Accounts</a></li>
-                            <li><a href="{{ url ('accounts/csv') }}">Update Accounts</a></li>
-                        </ul>
+                        <a href="{{ url ('accounts') }}">Accounts</a>
                     </li>
                 </ul>
             </div>
