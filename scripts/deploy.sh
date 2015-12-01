@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-echo "Deployment Started On : "
-date
+echo "Deployment Started On : " ; date
 
 cd /var/www/html/WTCAutomation
 
@@ -12,5 +11,4 @@ composer dump-autoload
 composer install
 php artisan migrate --force
 
-echo "Deployment Ended On : "
-date
+echo "Deployment Ended On : " ; date
