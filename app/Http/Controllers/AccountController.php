@@ -63,22 +63,19 @@ class AccountController extends Controller
             }
 
             $account->save();
+
+            foreach($account->children as $child){
+                $child->company_name = $account->company_name;
+                $child->contact_person = $account->contact_person;
+                $child->website = $account->website;
+                $child->logo = $account->logo;
+                $child->save();
+            }
+
             Session::flash('success' , "Saved");
             return redirect()->back();
         }else{
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
-
-        /*$this->validate($request, [
-            'company_name' => 'required',
-            'logo' => 'required'
-        ]);
-
-        if ($request->hasFile('logo')) {
-            $file = $request->file('logo');
-            $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move("uploads", $filename);
-            $request['logo'] = $filename;
-        }*/
     }
 }
