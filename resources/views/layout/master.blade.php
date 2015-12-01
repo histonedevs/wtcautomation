@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>@yield('title')</title>
+    <title>@yield('title' , "WTC Dialler Automation")</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/bs-3.3.5/jq-2.1.4,dt-1.10.9,b-1.0.3,b-colvis-1.0.3,fc-3.1.0,fh-3.0.0,r-1.0.7/datatables.min.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/colreorder/1.3.0/css/colReorder.dataTables.min.css">

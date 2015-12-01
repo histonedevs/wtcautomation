@@ -16,8 +16,12 @@ use yajra\Datatables\Html\Builder;
 
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
+use Illuminate\Support\Debug\Dumper;
+
 class CampaignController extends Controller
 {
+    private $line_number = 0;
+
     public function __construct()
     {
         $this->middleware("auth");
@@ -95,59 +99,102 @@ class CampaignController extends Controller
         return view('campaigns.import');
     }
 
-    public function postImportCsv(Request $request)
-    {
-        if (Input::hasFile('csv_file')) {
-            $file = Input::file('csv_file');
-            $file_extension = $file->getClientOriginalExtension();
+    private function showImportError($error){
+        p("Line # {$this->line_number} : {$error}");
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function postImportCsv(Request $request){
+        if ($request->hasFile('csv_file')) {
+            $file = $request->file('csv_file');
+            $file_extension = strtolower($file->getClientOriginalExtension());
+
             if ($file_extension == 'csv') {
-                $file = Input::file('csv_file');
-                $row = 0;
-                if (($handle = fopen($file, "r")) !== FALSE) {
-                    $account_ = null;
-                    while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                        $row++;
-                        if ($row > 1) {
-                            if($row[0]==""){
-                                /*$product = Product::where('asin',$row[9])->get();
-                                if(count($product) == 1){
-                                    $product->title = $row[0];
-                                    $product->image_url = $row[6];
+                if (($handle = fopen($file->getRealPath(), "r")) !== FALSE) {
+                    fgetcsv($handle, 1000);
 
-                                use account ---- $account_
-                                }*/
+                    $account = NULL;
+                    while (($row = fgetcsv($handle, 1000)) !== FALSE) {
+                        $this->line_number ++;
 
-                            }else{
-                                $account = Account::where('email', $row[3])->first();
-                                if(count($account)){
-                                    $account_ = $account;
-                                    $product = Product::where('asin',$row[9])->get();
-                                    if(count($product) == 1){
-                                        $product = Product::where('asin',$row[9])->first();
-                                        $product->title = $row[0];
-                                        $product->image_url = $row[6];
-                                        $product->save();
-                                    }else{
-                                        $child_ids = Account::where('parent_id',$account->id)->get();
+                        if(!empty($row[0])){
+                            $account = Account::where('email', $row[3])
+                                ->whereParentId(null)->first();
 
-                                        $product =DB::table('accounts')
-                                                        ->where('user_id', $account->id)
-                                                        ->orWhereIn('user_id',$child_ids)
-                                                        ->first();
+                            if($account) {
+                                $account->logo = $row[6];
+                                $account->website = $row[2];
+                                $account->contact_person = $row[1];
+                                $account->company_name = $row[0];
+                                $account->save();
 
-                                        $product->title = $row[0];
-                                        $product->image_url = $row[6];
-                                        $product->save();
-
-                                    }
+                                foreach($account->children as $child){
+                                    $child->logo = $row[6];
+                                    $child->website = $row[2];
+                                    $child->contact_person = $row[1];
+                                    $child->company_name = $row[0];
+                                    $child->save();
                                 }
+                            }else{
+                                $this->showImportError("Account with email {$row[3]} not found");
                             }
+                        }
+
+                        if($account && !empty($row[9])){
+                            $this->saveCampaign($row, $account);
+                        }else{
+                            $this->showImportError("Skipping, because account/asin was not found");
                         }
                     }
                     fclose($handle);
                 }
             }
         }
+
+        print "<a href=''>Go back</a>";
     }
 
+    private function saveCampaign($row, $account){
+        $products = Product::where('asin', $row[9])->get();
+        $chosen_product = null;
+        if(count($products) == 1){
+            $chosen_product = $products[0];
+        }else{
+            foreach($products as $product){
+                if($product->user_id == $account->id){
+                    $chosen_product = $product;
+                }
+
+                foreach($account->children as $child){
+                    if($product->user_id == $child->id){
+                        $chosen_product = $product;
+                        break;
+                    }
+                }
+
+                if($chosen_product){
+                    break;
+                }
+            }
+        }
+
+        if($chosen_product){
+            $this->showImportError("Found Product {$chosen_product->id}");
+
+            if(!$chosen_product->campaign){
+                Campaign::create([
+                    'user_id' => $chosen_product->user_id,
+                    'product_id' => $chosen_product->id,
+                    'name' => $row[7],
+                ]);
+                $this->showImportError("Created Campaign");
+            }else{
+                $this->showImportError('A Camp already exists, I will not create');
+            }
+        }else{
+            $this->showImportError("No product found with asin: {$row[9]}");
+        }
+    }
 }

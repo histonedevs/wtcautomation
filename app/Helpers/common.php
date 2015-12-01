@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Debug\Dumper;
 use yajra\Datatables\Html\Builder;
 
 /**
@@ -129,4 +130,11 @@ class MyDataTableBuilder extends Builder{
 
 function makeScripts($data_table){
     return MyDataTableBuilder::make_scripts($data_table);
+}
+
+function p()
+{
+    array_map(function ($x) {
+        (new Dumper)->dump($x);
+    }, func_get_args());
 }
