@@ -37,7 +37,7 @@
         <header>
 
             <img src="{{ $account->logo }}" alt="{{ $account->company_name }}" title="{{ $account->company_name }}"
-                 width="250" height="59" class="aligncenter size-full wp-image-3018"/>
+                 style="max-width: 300px" class="aligncenter size-full wp-image-3018"/>
 
             <h1>Thank You For Your Review!</h1>
 
