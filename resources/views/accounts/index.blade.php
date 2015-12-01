@@ -18,7 +18,7 @@
            <tr>
                <td>
                    @if($parent_user->logo)
-                       <img style="max-width: 200px" src="{{$parent_user->logo}}">;
+                       <img style="max-width: 200px" src="{{$parent_user->logo}}">
                    @endif
                </td>
                <td>{{ $parent_user->company_name }}</td>
