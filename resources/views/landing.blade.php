@@ -36,8 +36,8 @@
     <section id="main">
         <header>
 
-            <img src="http://worldtradeconcierge.com/wp-content/uploads/2015/11/Lamborghini-logo.png"
-                 alt="logo-island-miracle" width="250" height="59" class="aligncenter size-full wp-image-3018"/>
+            <img src="{{ $account->logo }}" alt="{{ $account->company_name }}" title="{{ $account->company_name }}"
+                 width="250" height="59" class="aligncenter size-full wp-image-3018"/>
 
             <h1>Thank You For Your Review!</h1>
 

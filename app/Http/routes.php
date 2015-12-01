@@ -10,13 +10,16 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+use App\Account;
 
 Route::get('/', function () {
     return redirect("auth/login");
 });
 
 Route::get('/support/{user_id}/{asin}', function($user_id , $asin){
-    return view('landing', compact('asin' , 'user_id'));
+    $account = Account::find($user_id);
+
+    return view('landing', compact('asin' , 'account'));
 });
 
 Route::controllers([

@@ -16,9 +16,12 @@ use yajra\Datatables\Html\Builder;
 
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
+use Illuminate\Support\Debug\Dumper;
 
 class CampaignController extends Controller
 {
+    private $line_number = 0;
+
     public function __construct()
     {
         $this->middleware("auth");
@@ -96,62 +99,102 @@ class CampaignController extends Controller
         return view('campaigns.import');
     }
 
-    public function postImportCsv(Request $request)
-    {
-        if (Input::hasFile('csv_file')) {
-            $file = Input::file('csv_file');
-            $file_extension = $file->getClientOriginalExtension();
+    private function showImportError($error){
+        p("Line # {$this->line_number} : {$error}");
+    }
+
+    /**
+     * @param Request $request
+     */
+    public function postImportCsv(Request $request){
+        if ($request->hasFile('csv_file')) {
+            $file = $request->file('csv_file');
+            $file_extension = strtolower($file->getClientOriginalExtension());
+
             if ($file_extension == 'csv') {
-                $row = 0;
-                if (($handle = fopen($file, "r")) !== FALSE) {
-                    $account_id = NULL;
-                    while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                        $row++;
-                        if ($row > 1) {
-                            if($row[0] == ""){
-                                $this->add_campaign($row[9], $account_id);
+                if (($handle = fopen($file->getRealPath(), "r")) !== FALSE) {
+                    fgetcsv($handle, 1000);
 
-                            }else{
-                                $account = Account::where('email', $row[3])->first();
+                    $account = NULL;
+                    while (($row = fgetcsv($handle, 1000)) !== FALSE) {
+                        $this->line_number ++;
 
-                                if(count($account)) {
-                                    $account_id = $account->id;
+                        if(!empty($row[0])){
+                            $account = Account::where('email', $row[3])
+                                ->whereParentId(null)->first();
 
-                                    $account->logo = $row[6];
-                                    $account->website = $row[2];
-                                    $account->contact_person = $row[1];
-                                    $account->company_name = $row[0];
-                                    $account->save();
+                            if($account) {
+                                $account->logo = $row[6];
+                                $account->website = $row[2];
+                                $account->contact_person = $row[1];
+                                $account->company_name = $row[0];
+                                $account->save();
 
+                                foreach($account->children as $child){
+                                    $child->logo = $row[6];
+                                    $child->website = $row[2];
+                                    $child->contact_person = $row[1];
+                                    $child->company_name = $row[0];
+                                    $child->save();
                                 }
-
-                                $this->add_campaign($row[9], $account_id);
+                            }else{
+                                $this->showImportError("Account with email {$row[3]} not found");
                             }
+                        }
+
+                        if($account && !empty($row[9])){
+                            $this->saveCampaign($row, $account);
+                        }else{
+                            $this->showImportError("Skipping, because account/asin was not found");
                         }
                     }
                     fclose($handle);
                 }
             }
         }
+
+        print "<a href=''>Go back</a>";
     }
 
-    private  function add_campaign($asin,$account_id){
-        $product = Product::where('asin', $asin)->get();
-        if(count($product) == 1){
-
-            $campaign = [
-                'user_id' => $account_id,
-                'product_id' => $product[0]->id
-
-            ];
-
-            Campaign::create($campaign);
-
+    private function saveCampaign($row, $account){
+        $products = Product::where('asin', $row[9])->get();
+        $chosen_product = null;
+        if(count($products) == 1){
+            $chosen_product = $products[0];
         }else{
-            // logic for campaigns
-            // if product found for more than one account
-            // starts here
+            foreach($products as $product){
+                if($product->user_id == $account->id){
+                    $chosen_product = $product;
+                }
+
+                foreach($account->children as $child){
+                    if($product->user_id == $child->id){
+                        $chosen_product = $product;
+                        break;
+                    }
+                }
+
+                if($chosen_product){
+                    break;
+                }
+            }
+        }
+
+        if($chosen_product){
+            $this->showImportError("Found Product {$chosen_product->id}");
+
+            if(!$chosen_product->campaign){
+                Campaign::create([
+                    'user_id' => $chosen_product->user_id,
+                    'product_id' => $chosen_product->id,
+                    'name' => $row[7],
+                ]);
+                $this->showImportError("Created Campaign");
+            }else{
+                $this->showImportError('A Camp already exists, I will not create');
+            }
+        }else{
+            $this->showImportError("No product found with asin: {$row[9]}");
         }
     }
-
 }

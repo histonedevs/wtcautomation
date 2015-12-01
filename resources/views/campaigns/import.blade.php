@@ -5,7 +5,7 @@
         {!! csrf_field() !!}
         <input type="hidden" name="pid">
         <div class="form-group">
-            <label for="csv_file">select a Csv file to import campaigns</label>
+            <label for="csv_file" class="control-label">Please select a csv file to import campaigns</label>
             <input type="file" name="csv_file" id="csv_file" accept=".csv">
         </div>
         <div class="form-group">
