@@ -2,7 +2,7 @@
 
 cd /var/www/html/WTCAutomation
 
-git pull
+git pull --no-edit
 sudo chmod 777 -R storage
 sudo chmod 777 -R bootstrap/cache
 composer dump-autoload
