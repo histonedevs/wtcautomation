@@ -101,36 +101,21 @@ class CampaignController extends Controller
             $file = Input::file('csv_file');
             $file_extension = $file->getClientOriginalExtension();
             if ($file_extension == 'csv') {
-                $file = Input::file('csv_file');
                 $row = 0;
                 if (($handle = fopen($file, "r")) !== FALSE) {
-                    $account_ = NULL;
+                    $account_id = NULL;
                     while (($row = fgetcsv($handle, 1000, ",")) !== FALSE) {
                         $row++;
                         if ($row > 1) {
                             if($row[0] == ""){
-                                //add_campaign($row[9], $account_->id);
-                                $product = Product::where('asin',$row[9])->get();
-                                if(count($product) == 1){
+                                $this->add_campaign($row[9], $account_id);
 
-                                    $campaign = [
-                                        'user_id' => $account_->id,
-                                        'product_id' => $product[0]->id
-
-                                    ];
-
-                                    Campaign::create($campaign);
-
-                                }else{
-                                    // logic for campaigns
-                                    // if product found for more than one account
-                                    // starts here
-                                }
                             }else{
                                 $account = Account::where('email', $row[3])->first();
+
                                 if(count($account)) {
-                                    echo $row[3];
-                                    $account_ = $account;
+                                    $account_id = $account->id;
+
                                     $account->logo = $row[6];
                                     $account->website = $row[2];
                                     $account->contact_person = $row[1];
@@ -139,23 +124,7 @@ class CampaignController extends Controller
 
                                 }
 
-                                $product = Product::where('asin',$row[9])->get();
-                                if(count($product) == 1){
-
-                                    $campaign = [
-                                        'user_id' => $account_->id,
-                                        'product_id' => $product[0]->id
-
-                                    ];
-
-                                    Campaign::create($campaign);
-
-                                }else{
-                                    // logic for campaigns
-                                    // if product found for more than one account
-                                    // starts here
-                                }
-                                //$this->add_campaign($row[9], $account_->id);
+                                $this->add_campaign($row[9], $account_id);
                             }
                         }
                     }
@@ -165,7 +134,7 @@ class CampaignController extends Controller
         }
     }
 
-    public  function add_campaign($asin,$account_id){
+    private  function add_campaign($asin,$account_id){
         $product = Product::where('asin', $asin)->get();
         if(count($product) == 1){
 
