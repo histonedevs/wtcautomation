@@ -6,9 +6,9 @@
    <table class="table table-bordered">
        <thead>
        <tr>
-           <th>Parent</th>
-           <th>First Name</th>
-           <th>Last Name</th>
+           <th>Logo</th>
+           <th>Company</th>
+           <th>Name</th>
            <th>Email</th>
            <th>Actions</th>
        </tr>
@@ -16,9 +16,13 @@
        <tbody>
        @foreach($parent_users as $parent_user)
            <tr>
-               <td></td>
-               <td>{{ $parent_user->first_name }}</td>
-               <td>{{ $parent_user->last_name }}</td>
+               <td>
+                   @if($parent_user->logo)
+                       <img style="width: 200px" src="{{$parent_user->logo}}">;
+                   @endif
+               </td>
+               <td>{{ $parent_user->company_name }}</td>
+               <td>{{ $parent_user->name }}</td>
                <td>{{ $parent_user->email }}</td>
                <td>
                    <a href="{{url('accounts/edit/1')}}" class="btn btn-warning">Edit</a>
