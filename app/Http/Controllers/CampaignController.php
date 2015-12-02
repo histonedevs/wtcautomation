@@ -42,8 +42,11 @@ class CampaignController extends Controller
 
         if($user_id){
             $base_query->join('accounts', 'campaigns.user_id' , '=' , 'accounts.id')
-                        ->where('campaigns.user_id',$user_id)
-                        ->orWhere('accounts.parent_id',$user_id);
+                        ->where(function($query) use($user_id){
+                            $query->where('campaigns.user_id',$user_id)
+                                ->orWhere('accounts.parent_id',$user_id);
+                        });
+
         }
 
         if($this->isAjax($request)){
