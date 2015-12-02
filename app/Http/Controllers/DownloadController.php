@@ -49,6 +49,7 @@ class DownloadController extends Controller
             ->where('soi.product_id', $campaign->product_id)
             ->where('so.purchased_at', '>=', $fromDate)
             ->where('so.purchased_at', '<=', $toDate)
+            ->where('soi.quantity_shipped','>',0)
             ->get();
 
         $filename = tempnam('', '') . ".csv";
