@@ -66,12 +66,15 @@ class CampaignController extends Controller
                 if($record->campaign_name) {
                     return $record->campaign_name;
                 }
-                return '<a class="btn btn-primary createCampBtn" href="#" product_id="'.$record->id.'">Create New</a>';
+                if($record->active) {
+                    return '<a class="btn btn-primary createCampBtn" href="#" product_id="'.$record->id.'">Create New</a>';
+                }
+                return 'Product not active';
             })
         ];
 
         $base_query = DB::table('products')->select(
-            ['campaigns.name as campaign_name', 'products.id', 'products.title as product_title', 'products.asin', 'accounts.company_name']
+            ['campaigns.name as campaign_name', 'products.id','products.active', 'products.title as product_title', 'products.asin', 'accounts.company_name']
         )->leftJoin('campaigns', 'campaigns.product_id' , '=' , 'products.id')
         ->join('accounts', 'products.user_id' , '=', 'accounts.id')
         ;
