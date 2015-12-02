@@ -7,17 +7,14 @@ use App\Product;
 use App\Account;
 use App\User;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Datatables;
 use yajra\Datatables\Html\Builder;
-
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use Illuminate\Support\Debug\Dumper;
-
 class CampaignController extends Controller
 {
     private $line_number = 0;

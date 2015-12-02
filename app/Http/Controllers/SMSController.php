@@ -7,6 +7,7 @@ use App\Api\GoogleUrl;
 use App\Api\Twilio;
 use App\Campaign;
 use App\Product;
+use App\Variable;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -34,7 +35,11 @@ class SMSController extends Controller
         $short_url = ($short_url)?$short_url: $long_url;
 
         $seller_name = "WTC";
-        $message = "From {$seller_name}: Please click the link here for a short video on how to leave your review: {$short_url}";
+        $sms_text = Variable::where('name','campaign_sms_text')->first();
+
+        $message = $sms_text->value;
+        $message = str_replace("[COMPANY_NAME]" , $campaign->user->company_name , $message);
+        $message = str_replace("[URL]" , $short_url , $message);
 
         try {
             Twilio::sendSMS($request->get('phoneNumber') , $message);
