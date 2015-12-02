@@ -74,6 +74,8 @@
             e.preventDefault();
 
             window.selected_campaign = $(this).attr("campaign_id");
+            window.discounted = $(this).attr("discount");
+            console.log("discounted = "+ window.discounted);
             $("#downloadCSVModal").modal();
         })
         
@@ -112,6 +114,7 @@
                             campaign_id : window.selected_campaign,
                             dateFrom : dateFrom,
                             dateTo: dateTo,
+                            discounted: window.discounted,
                         });
                 }else{
                     alert("Correct Following Errors : \n\n" + errors.join("\n"));
