@@ -6,6 +6,7 @@ use App\Account;
 use App\Api\GoogleUrl;
 use App\Api\Twilio;
 use App\Campaign;
+use App\Message;
 use App\Product;
 use App\Variable;
 use Exception;
@@ -41,9 +42,19 @@ class SMSController extends Controller
         $message = str_replace("[COMPANY_NAME]" , $campaign->user->company_name , $message);
         $message = str_replace("[URL]" , $short_url , $message);
 
+        $stored_msg = Message::create([
+            'user_id' => $this->user->id,
+            'recipient' => $request->get('phoneNumber'),
+            'product_id' => $campaign->product->id,
+            'text' => $message,
+        ]);
+
         try {
             Twilio::sendSMS($request->get('phoneNumber') , $message);
+            $stored_msg->sent = 1;
+            $stored_msg->save();
         } catch (Exception $exception) {
+            $stored_msg->error = $exception->getMessage();
             return $exception->getMessage();
         }
 

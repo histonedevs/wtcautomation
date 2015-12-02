@@ -30,6 +30,10 @@ class Account extends Model
         return $this->hasMany('App\Account', 'parent_id');
     }
 
+    public function message(){
+        return $this->hasMany('App\Message');
+    }
+
     protected $dates = ['deleted_at'];
 
 }
