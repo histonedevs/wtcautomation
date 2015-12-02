@@ -27,7 +27,7 @@ class CampaignController extends Controller
         $this->middleware("auth");
     }
 
-    public function getIndex(Request $request, Builder $htmlBuilder){
+    public function getList(Request $request, Builder $htmlBuilder, $user_id = Null){
         $columns = [
             make_column('campaign_name', 'campaigns.name', 'Campaign Name', 'text'),
             make_column('product_title', 'products.title', 'Product Name' , 'text'),
@@ -40,10 +40,16 @@ class CampaignController extends Controller
             ['campaigns.name as campaign_name', 'campaigns.id', 'products.title as product_title', 'products.asin']
         )->join('products', 'campaigns.product_id' , '=' , 'products.id');
 
+        if($user_id){
+            $base_query->join('accounts', 'campaigns.user_id' , '=' , 'accounts.id')
+                        ->where('campaigns.user_id',$user_id)
+                        ->orWhere('accounts.parent_id',$user_id);
+        }
+
         if($this->isAjax($request)){
             return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
         }else{
-            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns'));
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns/list/'.$user_id));
             return view('campaigns.index', compact('data_table'));
         }
     }

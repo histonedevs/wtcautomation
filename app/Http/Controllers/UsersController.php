@@ -41,8 +41,8 @@ class UsersController extends Controller
         $columns = [
             make_column('name' , 'users.name', 'Name', 'text'),
             make_column('email' , 'users.email', 'Email', 'text'),
-            make_column('sms', null, '', null, [], '<a class="btn btn-warning" href="{{url("users/edit/".$id)}}">Edit</a>', null, '0px', null, false),
-            make_column('download', null, '', null, [], '<a class="btn btn-danger" href="{{url("users/delete/".$id)}}">Delete</a>', null, '0px', null, false)
+            make_column('edit', null, '', null, [], '<a class="btn btn-warning" href="{{url("users/edit/".$id)}}">Edit</a>', null, '0px', null, false),
+            make_column('delete', null, '', null, [], '<a class="btn btn-danger" href="{{url("users/delete/".$id)}}">Delete</a>', null, '0px', null, false)
 
         ];
 
@@ -54,9 +54,7 @@ class UsersController extends Controller
         }else{
             $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('users'));
             return view('users.index', compact('data_table'));
-        }/*
-        $users = User::all();
-        return view('users.index', compact('users'));*/
+        }
     }
 
     public function postAdd(Request $request)

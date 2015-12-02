@@ -31,10 +31,14 @@ class AccountController extends Controller
             make_column('company_name', 'accounts.company_name', 'Company Name' , 'text'),
             make_column('name' , 'accounts.name', 'Name', 'text'),
             make_column('email' , 'accounts.email', 'Email', 'text'),
+            make_column('delete', null, '', null, [], '<a class="btn btn-primary" href="{{url("campaigns/list/".$id)}}">Campaigns</a>', null, '0px', null, false),
+            make_column('campaign', null, '', null, [], '<a class="btn btn-danger delete_account" href="#" path="{{url("accounts/delete/".$id)}}">Delete</a>', null, '0px', null, false),
+
         ];
 
         $base_query = DB::table('accounts')
                         ->whereParentId(NULL)
+                        ->whereDeletedAt(NULL)
                         ->select('accounts.*');
 
         if($this->isAjax($request)){
@@ -94,5 +98,12 @@ class AccountController extends Controller
         }else{
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
+    }
+
+    public function getDelete($user_id)
+    {
+        $user = Account::find($user_id);
+        $user->delete();
+        return redirect(url("accounts"));
     }
 }
