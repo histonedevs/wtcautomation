@@ -53,6 +53,7 @@ class SMSController extends Controller
         $message = str_replace("[URL]" , $short_url , $message);
 
         $stored_msg->text = $message;
+        $stored_msg->visited_at = null;
 
         try {
             Twilio::sendSMS($request->get('phoneNumber') , $message);
