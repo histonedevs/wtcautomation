@@ -15,7 +15,7 @@ class Message extends Model
 
     public function account()
     {
-        return $this->belongsTo('App\Account');
+        return $this->belongsTo('App\Account', 'user_id');
     }
 
     public function campaign()

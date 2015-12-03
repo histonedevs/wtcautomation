@@ -14,10 +14,16 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class SMSController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware("auth");
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -32,7 +38,7 @@ class SMSController extends Controller
         $campaign = Campaign::find($request->campaign_id);
 
         $stored_msg = Message::create([
-            'user_id' => $this->user->id,
+            'user_id' => Auth::user()->id,
             'recipient' => $request->get('phoneNumber'),
             'campaign_id' => $campaign->id,
         ]);
