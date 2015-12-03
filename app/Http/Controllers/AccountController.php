@@ -31,7 +31,7 @@ class AccountController extends Controller
             make_column('company_name', 'accounts.company_name', 'Company Name' , 'text'),
             make_column('name' , 'accounts.name', 'Name', 'text'),
             make_column('email' , 'accounts.email', 'Email', 'text'),
-            make_column('delete', null, '', null, [], '<a class="btn btn-primary" href="{{url("campaigns/list/".$id)}}">Campaigns</a>', null, '0px', null, false),
+            make_column('delete', null, '', null, [], '<a class="btn btn-primary" href="{{url("campaigns/index/".$id)}}">Campaigns</a>', null, '0px', null, false),
             make_column('campaign', null, '', null, [], '<a class="btn btn-danger delete_account" href="#" path="{{url("accounts/delete/".$id)}}">Delete</a>', null, '0px', null, false),
 
         ];
