@@ -27,7 +27,7 @@ class CreateMessagesTable extends Migration
 
             $table->string('text');
             $table->boolean('sent');
-            $table->timestamp('visited_at');
+            $table->timestamp('visited_at')->nullable()->default(null);
             $table->string('error');
 
             $table->timestamps();
