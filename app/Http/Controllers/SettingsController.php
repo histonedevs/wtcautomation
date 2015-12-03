@@ -37,7 +37,7 @@ class SettingsController extends Controller
             'class' => 'form-horizontal',
             'role' => "form"
 
-        ], array('text' => $sms_text->value));
+        ], array('text' => $sms_text ? $sms_text->value : ''));
         return view("settings.campaign_sms_text", compact('form'));
 
 
@@ -49,8 +49,16 @@ class SettingsController extends Controller
         $form = $this->form('App\Forms\SmsTextUpdate', ['method' => 'POST']);
 
         if($form->isValid()){
-            $variable->value = $request->get('value');
-            $variable->save();
+            if($variable){
+                $variable->value = $request->get('value');
+                $variable->save();
+            }else{
+                Variable::create([
+                   'name' =>  'campaign_sms_text',
+                    'value' => $request->get('value')
+                ]);
+            }
+
 
             return redirect()->back();
         }
