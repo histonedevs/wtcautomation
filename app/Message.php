@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Message extends Model
 {
     use SoftDeletes;
-    protected $fillable=['deleted_at','user_id','recipient','product_id','text','sent','visited','error'];
+    protected $fillable=['deleted_at','user_id','recipient','campaign_id','text','sent','visited_at','error'];
 
 
     protected $dates = ['deleted_at'];
@@ -16,5 +16,10 @@ class Message extends Model
     public function account()
     {
         return $this->belongsTo('App\Account');
+    }
+
+    public function campaign()
+    {
+        return $this->belongsTo('App\Campaign');
     }
 }

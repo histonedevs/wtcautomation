@@ -20,14 +20,14 @@ class CreateMessagesTable extends Migration
                 ->onDelete('cascade');
 
             $table->string('recipient');
-            $table->integer('product_id', false, true);
-            $table->foreign('product_id')
-                ->references('id')->on('products')
+            $table->integer('campaign_id', false, true);
+            $table->foreign('campaign_id')
+                ->references('id')->on('campaigns')
                 ->onDelete('cascade');
 
             $table->string('text');
             $table->boolean('sent');
-            $table->boolean('visited');
+            $table->timestamp('visited_at');
             $table->string('error');
 
             $table->timestamps();
