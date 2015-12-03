@@ -64,10 +64,12 @@ class CampaignController extends Controller
                 if($record->campaign_name) {
                     return $record->campaign_name;
                 }
+
                 if($record->active) {
                     return '<a class="btn btn-primary createCampBtn" href="#" product_id="'.$record->id.'">Create New</a>';
                 }
-                return 'Product not active';
+
+                return '';
             })
         ];
 
