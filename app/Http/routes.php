@@ -16,8 +16,14 @@ Route::get('/', function () {
     return redirect("auth/login");
 });
 
-Route::get('/support/{user_id}/{asin}', function($user_id , $asin){
-    $account = Account::find($user_id);
+Route::get('/r/{message_id}', function($message_id){
+
+    $message = \App\Message::find($message_id);
+    $asin = $message->campaign->product->asin;
+    $account = $message->account;
+
+    $message->visited_at = \Carbon\Carbon::now();
+    $message->save();
 
     return view('landing', compact('asin' , 'account'));
 });
