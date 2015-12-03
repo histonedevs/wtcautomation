@@ -99,6 +99,6 @@
         document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
     }
 </script>
-
+@include("analytics")
 </body>
 </html>

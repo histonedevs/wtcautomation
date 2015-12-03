@@ -67,5 +67,6 @@
     $('ul.nav a[href="' + window.location + '"]').parents("li").addClass('active');
 </script>
 @yield('page-script')
+@include("analytics")
 </body>
 </html>
