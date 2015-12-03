@@ -24,14 +24,14 @@ class CampaignController extends Controller
         $this->middleware("auth");
     }
 
-    public function getList(Request $request, Builder $htmlBuilder, $user_id = Null){
+    public function getIndex(Request $request, Builder $htmlBuilder, $user_id = Null){
         $columns = [
             make_column('campaign_name', 'campaigns.name', 'Campaign Name', 'text'),
             make_column('product_title', 'products.title', 'Product Name' , 'text'),
             make_column('asin' , 'products.asin', 'ASIN', 'text'),
             make_column('sms', null, '', null, [], '<a class="btn btn-primary sendSmsBtn" href="#" campaign_id="{{$id}}">Send SMS</a>', null, '0px', null, false),
-            make_column('download_discounted', null, '', null, [], '<a discount="1" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Download Discounted</a>', null, '0px', null, false),
-            make_column('download_non_discounted', null, '', null, [], '<a discount="0" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Download Non Discounted</a>', null, '0px', null, false)
+            make_column('download_discounted', null, '', null, [], '<a discount="1" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Promo</a>', null, '0px', null, false),
+            make_column('download_non_discounted', null, '', null, [], '<a discount="0" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Standard</a>', null, '0px', null, false)
         ];
 
         $base_query = DB::table('campaigns')->select(
@@ -50,7 +50,7 @@ class CampaignController extends Controller
         if($this->isAjax($request)){
             return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
         }else{
-            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns/list/'.$user_id));
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns/index/'.$user_id));
             return view('campaigns.index', compact('data_table'));
         }
     }
@@ -64,10 +64,12 @@ class CampaignController extends Controller
                 if($record->campaign_name) {
                     return $record->campaign_name;
                 }
+
                 if($record->active) {
                     return '<a class="btn btn-primary createCampBtn" href="#" product_id="'.$record->id.'">Create New</a>';
                 }
-                return 'Product not active';
+
+                return '';
             })
         ];
 

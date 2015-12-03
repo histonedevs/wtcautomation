@@ -54,8 +54,12 @@ class DownloadController extends Controller
             if($request->discounted){
                 $results->where('soi.item_discount', '>', 0);
             }else{
-                $results->where('soi.item_discount', '=!', 0);
+                $results->where(function($query){
+                    $query->where('soi.item_discount', '=', 0)
+                        ->orWhere('soi.item_discount', null);
+                });
             }
+        
         $results = $results->get();
 
         $filename = tempnam('', '') . ".csv";
