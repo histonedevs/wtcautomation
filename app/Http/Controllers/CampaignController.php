@@ -7,17 +7,14 @@ use App\Product;
 use App\Account;
 use App\User;
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Datatables;
 use yajra\Datatables\Html\Builder;
-
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
 use Illuminate\Support\Debug\Dumper;
-
 class CampaignController extends Controller
 {
     private $line_number = 0;
@@ -27,23 +24,33 @@ class CampaignController extends Controller
         $this->middleware("auth");
     }
 
-    public function getIndex(Request $request, Builder $htmlBuilder){
+    public function getIndex(Request $request, Builder $htmlBuilder, $user_id = Null){
         $columns = [
             make_column('campaign_name', 'campaigns.name', 'Campaign Name', 'text'),
             make_column('product_title', 'products.title', 'Product Name' , 'text'),
             make_column('asin' , 'products.asin', 'ASIN', 'text'),
             make_column('sms', null, '', null, [], '<a class="btn btn-primary sendSmsBtn" href="#" campaign_id="{{$id}}">Send SMS</a>', null, '0px', null, false),
-            make_column('download', null, '', null, [], '<a class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Download</a>', null, '0px', null, false)
+            make_column('download_discounted', null, '', null, [], '<a discount="1" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Promo</a>', null, '0px', null, false),
+            make_column('download_non_discounted', null, '', null, [], '<a discount="0" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Standard</a>', null, '0px', null, false)
         ];
 
         $base_query = DB::table('campaigns')->select(
             ['campaigns.name as campaign_name', 'campaigns.id', 'products.title as product_title', 'products.asin']
         )->join('products', 'campaigns.product_id' , '=' , 'products.id');
 
+        if($user_id){
+            $base_query->join('accounts', 'campaigns.user_id' , '=' , 'accounts.id')
+                        ->where(function($query) use($user_id){
+                            $query->where('campaigns.user_id',$user_id)
+                                ->orWhere('accounts.parent_id',$user_id);
+                        });
+
+        }
+
         if($this->isAjax($request)){
             return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
         }else{
-            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns'));
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns/index/'.$user_id));
             return view('campaigns.index', compact('data_table'));
         }
     }
@@ -57,12 +64,17 @@ class CampaignController extends Controller
                 if($record->campaign_name) {
                     return $record->campaign_name;
                 }
-                return '<a class="btn btn-primary createCampBtn" href="#" product_id="'.$record->id.'">Create New</a>';
+
+                if($record->active) {
+                    return '<a class="btn btn-primary createCampBtn" href="#" product_id="'.$record->id.'">Create New</a>';
+                }
+
+                return '';
             })
         ];
 
         $base_query = DB::table('products')->select(
-            ['campaigns.name as campaign_name', 'products.id', 'products.title as product_title', 'products.asin', 'accounts.company_name']
+            ['campaigns.name as campaign_name', 'products.id','products.active', 'products.title as product_title', 'products.asin', 'accounts.company_name']
         )->leftJoin('campaigns', 'campaigns.product_id' , '=' , 'products.id')
         ->join('accounts', 'products.user_id' , '=', 'accounts.id')
         ;

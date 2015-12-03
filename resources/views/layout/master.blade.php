@@ -36,6 +36,12 @@
                     <li>
                         <a href="{{ url ('accounts') }}">Accounts</a>
                     </li>
+                    <li>
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url ('settings/campaign-sms-text') }}">Campaigns SMS Text</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
             <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right" style="margin-top:5px;">Sign Out</a>
@@ -67,5 +73,6 @@
     $('ul.nav a[href="' + window.location + '"]').parents("li").addClass('active');
 </script>
 @yield('page-script')
+@include("analytics")
 </body>
 </html>

@@ -49,7 +49,18 @@ class DownloadController extends Controller
             ->where('soi.product_id', $campaign->product_id)
             ->where('so.purchased_at', '>=', $fromDate)
             ->where('so.purchased_at', '<=', $toDate)
-            ->get();
+            ->where('so.order_status','Shipped');
+
+            if($request->discounted){
+                $results->where('soi.item_discount', '>', 0);
+            }else{
+                $results->where(function($query){
+                    $query->where('soi.item_discount', '=', 0)
+                        ->orWhere('soi.item_discount', null);
+                });
+            }
+        
+        $results = $results->get();
 
         $filename = tempnam('', '') . ".csv";
         $heading = array('# of Orders', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Postal Code', 'Country', 'Phone', 'Amazon Email', 'Amazon #', 'Sale Date', 'Product', 'Price', 'Asin');

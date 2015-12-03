@@ -20,7 +20,8 @@ use Services_Twilio_TinyHttp;
 use Illuminate\Support\Facades\Session;
 use \Validator;
 use App\Account;
-
+use Datatables;
+use yajra\Datatables\Html\Builder;
 
 class UsersController extends Controller
 {
@@ -29,15 +30,31 @@ class UsersController extends Controller
         $this->middleware("auth");
     }
 
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Builder $htmlBuilder
+     * @return \BladeView|bool|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getIndex()
+    public function getIndex(Request $request, Builder $htmlBuilder)
     {
-        $users = User::all();
-        return view('users.index', compact('users'));
+        $columns = [
+            make_column('name' , 'users.name', 'Name', 'text'),
+            make_column('email' , 'users.email', 'Email', 'text'),
+            make_column('edit', null, '', null, [], '<a class="btn btn-warning" href="{{url("users/edit/".$id)}}">Edit</a>', null, '0px', null, false),
+            make_column('delete', null, '', null, [], '<a class="btn btn-danger" href="{{url("users/delete/".$id)}}">Delete</a>', null, '0px', null, false)
+
+        ];
+
+        $base_query = DB::table('users')
+            ->select('users.*');
+
+        if($this->isAjax($request)){
+            return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
+        }else{
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('users'));
+            return view('users.index', compact('data_table'));
+        }
     }
 
     public function postAdd(Request $request)
