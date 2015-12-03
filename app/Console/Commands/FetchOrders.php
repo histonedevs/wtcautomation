@@ -109,6 +109,24 @@ class FetchOrders extends Command
         }
     }
 
+
+    private function getProducts(){
+        foreach (Account::all() as $user) {
+            try {
+                foreach ($this->callAPI("products/list/{$user->unique_id}") as $record) {
+                    $this->saveItem('App\Product', $record);
+                }
+            }catch (\Exception $ex){
+                if($ex->getCode() == INVALID_USER){
+                    continue;
+                }else{
+                    print $ex->getTraceAsString();
+                    throw $ex;
+                }
+            }
+        }
+    }
+
     /**
      *
      */
@@ -186,5 +204,6 @@ class FetchOrders extends Command
     {
         $this->getUsers();
         $this->getOrders();
+        $this->getProducts();
     }
 }
