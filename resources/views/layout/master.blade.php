@@ -28,13 +28,19 @@
                     <li>
                         <a href="#" data-toggle="dropdown" class="dropdown-toggle">Campaigns<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url ('campaigns') }}">All Campaigns</a></li>
+                            <li><a href="{{ url ('campaigns/list') }}">All Campaigns</a></li>
                             <li><a href="{{ url ('campaigns/add') }}">Add Campaign</a></li>
                             <li><a href="{{ url ('campaigns/import-csv') }}">Import Campaign</a></li>
                         </ul>
                     </li>
                     <li>
                         <a href="{{ url ('accounts') }}">Accounts</a>
+                    </li>
+                    <li>
+                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url ('settings/campaign-sms-text') }}">Campaigns SMS Text</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>

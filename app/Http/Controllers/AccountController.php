@@ -12,6 +12,8 @@ use DB;
 use App\UserCompany;
 use Illuminate\Support\Facades\Session;
 use Kris\LaravelFormBuilder\FormBuilderTrait;
+use Datatables;
+use yajra\Datatables\Html\Builder;
 
 class AccountController extends Controller
 {
@@ -22,10 +24,29 @@ class AccountController extends Controller
         $this->middleware("auth");
     }
 
-    public function getIndex()
+    public function getIndex(Request $request, Builder $htmlBuilder)
     {
-        $parent_users = Account::whereParentId(NULL)->get();
-        return view('accounts.index', compact('parent_users'));
+        $columns = [
+            make_column('logo', null, 'Logo', null, [], '<img style="max-width: 200px" src="{{$logo}}"/>', null, '0px', null, false),
+            make_column('company_name', 'accounts.company_name', 'Company Name' , 'text'),
+            make_column('name' , 'accounts.name', 'Name', 'text'),
+            make_column('email' , 'accounts.email', 'Email', 'text'),
+            make_column('delete', null, '', null, [], '<a class="btn btn-primary" href="{{url("campaigns/list/".$id)}}">Campaigns</a>', null, '0px', null, false),
+            make_column('campaign', null, '', null, [], '<a class="btn btn-danger delete_account" href="#" path="{{url("accounts/delete/".$id)}}">Delete</a>', null, '0px', null, false),
+
+        ];
+
+        $base_query = DB::table('accounts')
+                        ->whereParentId(NULL)
+                        ->whereDeletedAt(NULL)
+                        ->select('accounts.*');
+
+        if($this->isAjax($request)){
+            return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
+        }else{
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('accounts'));
+            return view('accounts.index', compact('data_table'));
+        }
     }
 
     public function getCsv()
@@ -77,5 +98,12 @@ class AccountController extends Controller
         }else{
             return redirect()->back()->withErrors($form->getErrors())->withInput();
         }
+    }
+
+    public function getDelete($user_id)
+    {
+        $user = Account::find($user_id);
+        $user->delete();
+        return redirect(url("accounts"));
     }
 }
