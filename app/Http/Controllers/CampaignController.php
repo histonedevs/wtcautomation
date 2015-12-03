@@ -24,7 +24,7 @@ class CampaignController extends Controller
         $this->middleware("auth");
     }
 
-    public function getList(Request $request, Builder $htmlBuilder, $user_id = Null){
+    public function getIndex(Request $request, Builder $htmlBuilder, $user_id = Null){
         $columns = [
             make_column('campaign_name', 'campaigns.name', 'Campaign Name', 'text'),
             make_column('product_title', 'products.title', 'Product Name' , 'text'),
@@ -50,7 +50,7 @@ class CampaignController extends Controller
         if($this->isAjax($request)){
             return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
         }else{
-            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns/list/'.$user_id));
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('campaigns/index/'.$user_id));
             return view('campaigns.index', compact('data_table'));
         }
     }
