@@ -114,6 +114,7 @@ class FetchOrders extends Command
         foreach (Account::all() as $user) {
             try {
                 foreach ($this->callAPI("products/list/{$user->unique_id}") as $record) {
+                    $record->user_id = $user->id;
                     $this->saveItem('App\Product', $record);
                 }
             }catch (\Exception $ex){
