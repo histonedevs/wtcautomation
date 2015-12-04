@@ -136,14 +136,17 @@ class CampaignController extends Controller
                                 ->whereParentId(null)->first();
 
                             if($account) {
-                                $account->logo = $row[6];
+                                if(!$account->logo && !empty($row[6])) {
+                                    $account->logo = $row[6];
+                                }
+
                                 $account->website = $row[2];
                                 $account->contact_person = $row[1];
                                 $account->company_name = $row[0];
                                 $account->save();
 
                                 foreach($account->children as $child){
-                                    $child->logo = $row[6];
+                                    $child->logo = $account->logo;
                                     $child->website = $row[2];
                                     $child->contact_person = $row[1];
                                     $child->company_name = $row[0];

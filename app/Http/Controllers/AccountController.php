@@ -27,7 +27,14 @@ class AccountController extends Controller
     public function getIndex(Request $request, Builder $htmlBuilder)
     {
         $columns = [
-            make_column('logo', null, 'Logo', null, [], '<img style="max-width: 200px" src="{{$logo}}"/>', null, '0px', null, false),
+            make_column('logo', null, 'Logo', null, [],
+                function($record){
+                    if($record->logo){
+                        return "<img style='max-width: 200px' src='{$record->logo}' />";
+                    }else{
+                        return "";
+                    }
+                } , null, '0px', null, false),
             make_column('company_name', 'accounts.company_name', 'Company Name' , 'text'),
             make_column('name' , 'accounts.name', 'Name', 'text'),
             make_column('email' , 'accounts.email', 'Email', 'text'),
