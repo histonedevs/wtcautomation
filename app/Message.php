@@ -13,11 +13,6 @@ class Message extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function account()
-    {
-        return $this->belongsTo('App\Account', 'user_id');
-    }
-
     public function campaign()
     {
         return $this->belongsTo('App\Campaign');

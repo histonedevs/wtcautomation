@@ -20,7 +20,7 @@ Route::get('/r/{message_id}', function($message_id){
 
     $message = \App\Message::find($message_id);
     $asin = $message->campaign->product->asin;
-    $account = $message->account;
+    $account = $message->campaign->user;
 
     $message->visited_at = \Carbon\Carbon::now();
     $message->save();
