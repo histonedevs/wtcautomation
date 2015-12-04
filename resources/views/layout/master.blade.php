@@ -18,30 +18,39 @@
             </div>
             <div>
                 <ul class="nav navbar-nav dropdown">
-                    <li>
-                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Users<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url('users')  }}">All Users</a></li>
-                            <li><a href="{{ url('users/add') }}">Add User</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Campaigns<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url ('campaigns') }}">All Campaigns</a></li>
-                            <li><a href="{{ url ('campaigns/add') }}">Add Campaign</a></li>
-                            <li><a href="{{ url ('campaigns/import-csv') }}">Import Campaign</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="{{ url ('accounts') }}">Accounts</a>
-                    </li>
-                    <li>
-                        <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ url ('settings/campaign-sms-text') }}">Campaigns SMS Text</a></li>
-                        </ul>
-                    </li>
+                    @if(Auth::user()->user_type == 'admin')
+                        <li>
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Users<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url('users')  }}">All Users</a></li>
+                                <li><a href="{{ url('users/add') }}">Add User</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Campaigns<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url ('campaigns') }}">All Campaigns</a></li>
+                                <li><a href="{{ url ('campaigns/add') }}">Add Campaign</a></li>
+                                <li><a href="{{ url ('campaigns/import-csv') }}">Import Campaign</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{{ url ('accounts') }}">Accounts</a>
+                        </li>
+                        <li>
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Settings<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url ('settings/campaign-sms-text') }}">Campaigns SMS Text</a></li>
+                            </ul>
+                        </li>
+                    @elseif(Auth::user()->user_type == 'operator')
+                        <li>
+                            <a href="#" data-toggle="dropdown" class="dropdown-toggle">Campaigns<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ url ('campaigns') }}">All Campaigns</a></li>
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
             </div>
             <a href="{{  url('auth/logout')  }}" class="navbar-link btn btn-default pull-right" style="margin-top:5px;">Sign Out</a>
