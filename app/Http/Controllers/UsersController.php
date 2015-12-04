@@ -41,6 +41,7 @@ class UsersController extends Controller
         $columns = [
             make_column('name' , 'users.name', 'Name', 'text'),
             make_column('email' , 'users.email', 'Email', 'text'),
+            make_column('user_type' , 'users.user_type', 'User Type', 'text'),
             make_column('edit', null, '', null, [], '<a class="btn btn-warning" href="{{url("users/edit/".$id)}}">Edit</a>', null, '0px', null, false),
             make_column('delete', null, '', null, [], '<a class="btn btn-danger" href="{{url("users/delete/".$id)}}">Delete</a>', null, '0px', null, false)
 
@@ -88,12 +89,8 @@ class UsersController extends Controller
 
     public function postEdit(Request $request, $id)
     {
-        $request = array(
-            'name' => $request->get('name'),
-            'email' => $request->get('email')
-        );
         $user = User::find($id);
-        $user->update($request);
+        $user->update($request->all());
         return redirect('users/index');
     }
 

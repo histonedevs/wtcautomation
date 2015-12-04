@@ -15,7 +15,8 @@
                 </div>
                 <div class="form-group">
                     <label for="email">User Type</label>
-                    <select name="user_type" class="form-control">
+                    <select name="user_type" id="user_type" class="form-control">
+                        <option value="">Choose a user type</option>
                         <option value="admin">Admin</option>
                         <option value="supervisor">Supervisor</option>
                         <option value="operator">Operator</option>

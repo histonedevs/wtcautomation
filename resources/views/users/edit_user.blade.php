@@ -13,8 +13,23 @@
                     <label for="email">Email</label>
                     <input type="email" class="form-control" id="email" name="email" value="{{$user->email}}" required="required">
                 </div>
+                <div class="form-group">
+                    <label for="email">User Type</label>
+                    <select name="user_type" id="user_type" class="form-control">
+                        <option value="">Choose a user type</option>
+                        <option value="admin">Admin</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="operator">Operator</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-default" id="submit" name="submit">Update</button>
             </form>
         </div>
     </div>
+@endsection
+
+@section('page-script')
+    <script>
+        $("#user_type").val('{{$user->user_type}}');
+    </script>
 @endsection
