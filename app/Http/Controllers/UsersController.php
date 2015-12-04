@@ -62,6 +62,7 @@ class UsersController extends Controller
         $user = array(
             'name' => $request->get('name'),
             'email' => $request->get('email'),
+            'user_type' => $request->get('user_type'),
             'password' => Hash::make($request->get('password'))
         );
 

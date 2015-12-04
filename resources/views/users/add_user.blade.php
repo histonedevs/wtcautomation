@@ -14,6 +14,14 @@
                     <input type="email" class="form-control" id="email" name="email" placeholder="Enter Email">
                 </div>
                 <div class="form-group">
+                    <label for="email">User Type</label>
+                    <select name="user_type" class="form-control">
+                        <option value="admin">Admin</option>
+                        <option value="supervisor">Supervisor</option>
+                        <option value="operator">Operator</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="password">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter Password">
                 </div>
