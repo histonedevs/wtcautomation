@@ -18,7 +18,7 @@
             </div>
             <div>
                 <ul class="nav navbar-nav dropdown">
-                    @if(Auth::user()->user_type == 'admin')
+                    @if(Auth::user()->user_type == 'admin' OR Auth::user()->user_type == 'supervisor')
                         <li>
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle">Users<span class="caret"></span></a>
                             <ul class="dropdown-menu">
