@@ -43,6 +43,14 @@
                                 <li><a href="{{ url ('settings/campaign-sms-text') }}">Campaigns SMS Text</a></li>
                             </ul>
                         </li>
+                        @if(Auth::user()->user_type == 'admin')
+                            <li>
+                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Messages<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="{{ url ('sms/index') }}">All</a></li>
+                                </ul>
+                            </li>
+                        @endif
                     @elseif(Auth::user()->user_type == 'operator')
                         <li>
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle">Campaigns<span class="caret"></span></a>
