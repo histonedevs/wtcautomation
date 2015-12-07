@@ -51,7 +51,7 @@ class DownloadController extends Controller
             ->where('so.purchased_at', '<=', $toDate)
             ->where('so.order_status','Shipped')
             ->where('b.phone', '!=' , '')
-            ->where('b.phone', '!=' , null);
+            ->whereNotNull('b.phone');
 
             if($request->discounted){
                 $results->where('soi.item_discount', '>', 0);
