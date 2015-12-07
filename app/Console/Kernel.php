@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\Inspire::class,
         \App\Console\Commands\FetchOrders::class,
-
+        \App\Console\Commands\GetPhoneType::class
     ];
 
     /**

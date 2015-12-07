@@ -9,11 +9,21 @@
 namespace App\Api;
 
 
+use Lookups_Services_Twilio;
 use Services_Twilio;
 use Services_Twilio_TinyHttp;
 
 class Twilio
 {
+    public static function lookup($phoneNumber , $countryCode){
+        $client = new Lookups_Services_Twilio(env('TWILIO_SID'), env('TWILIO_TOKEN'));
+        $number = $client->phone_numbers->get($phoneNumber, [
+            "CountryCode" => $countryCode,
+            "Type" => "carrier"
+        ]);
+        return $number->carrier;
+    }
+
 
     public static function sendSMS($to, $message){
         $http = new Services_Twilio_TinyHttp(
