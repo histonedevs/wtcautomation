@@ -32,7 +32,7 @@ class DownloadController extends Controller
         try {
             $fromDate = Carbon::parse($request->get('dateFrom'));
             $toDate = Carbon::parse($request->get('dateTo'));
-        }catch (\Exception $ex){
+        } catch (\Exception $ex) {
             return $ex->getMessage();
         }
 
@@ -49,22 +49,30 @@ class DownloadController extends Controller
             ->where('soi.product_id', $campaign->product_id)
             ->where('so.purchased_at', '>=', $fromDate)
             ->where('so.purchased_at', '<=', $toDate)
-            ->where('so.order_status','Shipped')
-            ->where('b.phone', '!=' , '')
+            ->where('so.order_status', 'Shipped')
+            ->where('b.phone', '!=', '')
             ->whereNotNull('b.phone');
 
-            if($request->discounted){
-                $results->where('soi.item_discount', '>', 0);
-            }else{
-                $results->where(function($query){
-                    $query->where('soi.item_discount', '=', 0)
-                        ->orWhere('soi.item_discount', null);
-                });
-            }
-        
+        $type = "";
+        if ($request->discounted) {
+            $type = "Promo";
+            $results->where('soi.item_discount', '>', 0);
+        } else {
+            $type = "Standard";
+            $results->where(function ($query) {
+                $query->where('soi.item_discount', '=', 0)
+                    ->orWhere('soi.item_discount', null);
+            });
+        }
+
         $results = $results->get();
 
-        $filename = tempnam('', '') . ".csv";
+        $today = Carbon::now()->format('Y-m-d');
+
+        $from = $fromDate->format("M d");
+        $to = $fromDate->format("M d");
+
+        $filename = storage_path("app/downloads/{$today} {$campaign->user->company_name} - {$from} - to - {$to} {$campaign->name} {$type}.csv");
         $heading = array('# of Orders', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Postal Code', 'Country', 'Phone', 'Amazon Email', 'Amazon #', 'Sale Date', 'Product', 'Price', 'Asin');
 
         $fp = fopen($filename, 'w');
