@@ -100,9 +100,9 @@ class SMSController extends Controller
 
         ];
 
-        $base_query = DB::table('messages')->select('messages.*','campaigns.name as campaign_name','accounts.name as user_name')
+        $base_query = DB::table('messages')->select('messages.*','campaigns.name as campaign_name','users.name as user_name')
             ->join('campaigns', 'messages.campaign_id' , '=', 'campaigns.id')
-            ->join('accounts', 'messages.user_id' , '=', 'accounts.id');
+            ->join('users', 'messages.user_id' , '=', 'users.id');
 
         if($this->isAjax($request)){
             return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
