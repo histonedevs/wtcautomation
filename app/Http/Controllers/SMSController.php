@@ -66,8 +66,9 @@ class SMSController extends Controller
         ]);
 
         $long_url = url("r/{$stored_msg->id}");
-        $short_url = GoogleUrl::getShortURL($long_url);
-        $short_url = ($short_url)?$short_url: $long_url;
+        //$short_url = GoogleUrl::getShortURL($long_url);
+        //$short_url = ($short_url)?$short_url: $long_url;
+        $short_url = $long_url;
 
         $sms_text = Variable::where('name','campaign_sms_text')->first();
         $message = $sms_text->value;
