@@ -25,7 +25,10 @@ Route::get('/r/{message_id}', function($message_id){
     $message->visited_at = \Carbon\Carbon::now();
     $message->save();
 
-    return view('landing', compact('asin' , 'account'));
+    $marketplace_id = $account->marketplace->marketplace_id;
+    $seller_id = $account->merchant_id;
+
+    return view('landing', compact('asin' , 'account', 'marketplace_id' , 'seller_id'));
 });
 
 Route::controllers([

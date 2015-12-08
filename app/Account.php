@@ -9,11 +9,15 @@ class Account extends Model
 {
     use SoftDeletes;
 
-    protected $fillable=['unique_id','parent_id','name','first_name','last_name','email','merchant_id','auth_token','deleted_at', 'account_title'];
+    protected $fillable=['unique_id','parent_id','name','first_name','last_name','email','merchant_id','auth_token','deleted_at', 'account_title', 'marketplace_id'];
 
     public function orders()
     {
         return $this->hasMany('App\SaleOrder');
+    }
+
+    public function marketplace(){
+        return $this->belongsTo('App\Marketplace');
     }
 
     /**

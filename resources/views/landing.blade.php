@@ -65,7 +65,7 @@
             </p>
             <div style="margin-top:-30px; margin-bottom:-30px;"><hr></div>
             <p>
-                <a href="https://www.amazon.com/review/review-your-purchases?ie=UTF8&asins={{ $asin }}&channel=awReviews&ref_=aw_cr_write_cr&#" style="text-decoration:none; color:#000000;">
+                <a href="https://www.amazon.com/gp/help/contact/contact.html?ie=UTF8&asin={{ $asin }}&isCBA=&marketplaceID={{ $marketplace_id }}&orderID=&ref_=aag_d_sh&sellerID={{ $seller_id }}" style="text-decoration:none; color:#000000;">
                     <img src="{{ asset('assets/css/landing/images/full_star.png') }} " alt="3" width="30px;" height="29px;"/>
                     <img src="{{ asset('assets/css/landing/images/full_star.png') }} " alt="5" width="30px;" height="29px;"/>
                     <img src="{{ asset('assets/css/landing/images/full_star.png') }} " alt="5" width="30px;" height="29px;"/>
@@ -75,7 +75,7 @@
             </p>
             <div style="margin-top:-30px; margin-bottom:-30px;"><hr></div>
             <p>
-                <a href="https://www.amazon.com/review/review-your-purchases?ie=UTF8&asins={{ $asin }}&channel=awReviews&ref_=aw_cr_write_cr&#" style="text-decoration:none; color:#000000;">
+                <a href="https://www.amazon.com/gp/help/contact/contact.html?ie=UTF8&asin={{ $asin }}&isCBA=&marketplaceID={{ $marketplace_id }}&orderID=&ref_=aag_d_sh&sellerID={{ $seller_id }}" style="text-decoration:none; color:#000000;">
                     <img src="{{ asset('assets/css/landing/images/full_star.png') }} " alt="2" width="30px;" height="29px;"/>
                     <img src="{{ asset('assets/css/landing/images/full_star.png') }} " alt="5" width="30px;" height="29px;"/>
                     <br>
@@ -84,7 +84,7 @@
             </p>
             <div style="margin-top:-30px; margin-bottom:-30px;"><hr></div>
             <p>
-                <a href="https://www.amazon.com/review/review-your-purchases?ie=UTF8&asins={{ $asin }}&channel=awReviews&ref_=aw_cr_write_cr&#" style="text-decoration:none; color:#000000;">
+                <a href="https://www.amazon.com/gp/help/contact/contact.html?ie=UTF8&asin={{ $asin }}&isCBA=&marketplaceID={{ $marketplace_id }}&orderID=&ref_=aag_d_sh&sellerID={{ $seller_id }}" style="text-decoration:none; color:#000000;">
                     <img src="{{ asset('assets/css/landing/images/full_star.png') }} " alt="1" width="30px;" height="29px;"/>
                     <br>
                     <span style="font-size:18px;font-weight:bold;">I hate it</span>
