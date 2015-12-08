@@ -27,8 +27,10 @@ Route::get('/r/{message_id}', function($message_id){
 
     $marketplace_id = $account->marketplace->marketplace_id;
     $seller_id = $account->merchant_id;
+    $amazon_url = $account->marketplace->amazon_url;
+    $amazon_url = str_replace('http://' , 'https://', $amazon_url);
 
-    return view('landing', compact('asin' , 'account', 'marketplace_id' , 'seller_id'));
+    return view('landing', compact('asin' , 'account', 'marketplace_id' , 'seller_id', 'amazon_url'));
 });
 
 Route::controllers([
