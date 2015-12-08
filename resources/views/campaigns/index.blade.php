@@ -18,8 +18,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-default pull-left resetSMS">Reset</button>
+                    <button type="button" class="btn btn-primary pull-left testSMS">Test</button>
+
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary sendSMS">Send</button>
+                    <button type="button" class="btn btn-success sendSMS">Send</button>
                 </div>
             </div>
         </div>
@@ -62,11 +65,21 @@
 @section('page-script')
     {!! makeScripts($data_table) !!}
     <script type="text/javascript">
+        function resetSMSModal(){
+            $("#sendSMSModal .testSMS").show();
+            $("#sendSMSModal .sendSMS").hide();
+            $("#phoneNumber").val("").prop("disabled", false);
+        }
+
+        $(document).on("click", ".resetSMS", resetSMSModal);
+
         $(document).on("click", ".sendSmsBtn", function (e) {
             e.preventDefault();
 
             window.selected_campaign = $(this).attr("campaign_id");
             $("#phoneNumber").val("");
+
+            resetSMSModal();
             $("#sendSMSModal").modal();
         });
 
@@ -94,6 +107,24 @@
                     alert("Please enter a phone number");
                 }
             });
+
+            $("#sendSMSModal .testSMS").click(function () {
+                var phoneNumber  = $("#phoneNumber").val().trim();
+                if(phoneNumber){
+                    $.get("{{ url("sms/carrier") }}", {phoneNumber: phoneNumber}, function (r) {
+                        if(r == "ok"){
+                            $("#sendSMSModal .testSMS").hide();
+                            $("#sendSMSModal .sendSMS").show();
+                            $("#phoneNumber").prop("disabled", true);
+                        }else{
+                            alert(r);
+                        }
+                    });
+                }else{
+                    alert("Please enter a phone number");
+                }
+            });
+
 
             $("#downloadCSVModal .downloadBtn").click(function () {
                 var errors = [];

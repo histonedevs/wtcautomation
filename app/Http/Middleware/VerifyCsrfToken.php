@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         "sms",
-        "campaigns/add"
+        "campaigns/add",
+        "sms/carrier"
     ];
 }

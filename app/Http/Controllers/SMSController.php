@@ -26,6 +26,19 @@ class SMSController extends Controller
         $this->middleware("auth");
     }
 
+    public function getCarrier(Request $request){
+        $this->validate($request, [
+            'phoneNumber' => 'required',
+        ]);
+
+        $carrier = Twilio::lookup($request->phoneNumber);
+        if($carrier->type != "mobile"){
+            return "This is not a mobile number";
+        }
+
+        return "ok";
+    }
+
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -37,10 +50,12 @@ class SMSController extends Controller
             'phoneNumber' => 'required',
         ]);
 
+        /*
         $carrier = Twilio::lookup($request->phoneNumber);
         if($carrier->type != "mobile"){
             return "This is not a mobile number";
         }
+        */
 
         $campaign = Campaign::find($request->campaign_id);
 
