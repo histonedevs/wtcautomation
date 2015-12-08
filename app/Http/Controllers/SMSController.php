@@ -101,7 +101,7 @@ class SMSController extends Controller
             return redirect(url('home'));
         }
         $columns = [
-            make_column('user_name', 'user_name', 'Sender' , 'text'),
+            make_column('user_name', 'users.name', 'Sender' , 'text'),
             make_column('recipient' , 'messages.recipient', 'Recipient', 'text'),
             make_column('campaign_name', 'campaigns.name', 'Campaign' , 'text'),
             make_column('text' , 'messages.text', 'SMS', 'text'),
@@ -112,8 +112,8 @@ class SMSController extends Controller
                 }else{
                     return 'Not visited';
                 }
-            })
-
+            }),
+            make_column('stars' , 'messages.stars', 'Stars', 'number'),
         ];
 
         $base_query = DB::table('messages')->select('messages.*','campaigns.name as campaign_name','users.name as user_name')

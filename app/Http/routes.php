@@ -19,18 +19,33 @@ Route::get('/', function () {
 Route::get('/r/{message_id}', function($message_id){
 
     $message = \App\Message::find($message_id);
-    $asin = $message->campaign->product->asin;
     $account = $message->campaign->user;
 
     $message->visited_at = \Carbon\Carbon::now();
     $message->save();
 
-    $marketplace_id = $account->marketplace->marketplace_id;
-    $seller_id = $account->merchant_id;
+    return view('landing', compact('account', 'message_id'));
+});
+
+Route::get('/v/{message_id}/{stars}', function($message_id , $stars){
+    $message = \App\Message::find($message_id);
+    $asin = $message->campaign->product->asin;
+
+    $account = $message->campaign->user;
     $amazon_url = $account->marketplace->amazon_url;
     $amazon_url = str_replace('http://' , 'https://', $amazon_url);
 
-    return view('landing', compact('asin' , 'account', 'marketplace_id' , 'seller_id', 'amazon_url'));
+    $marketplace_id = $account->marketplace->marketplace_id;
+    $seller_id = $account->merchant_id;
+
+    $message->stars = $stars;
+    $message->save();
+
+    if($stars == '5' || $stars == '4'){
+        return redirect("{$amazon_url}/review/review-your-purchases?ie=UTF8&asins={$asin}&channel=awReviews&ref_=aw_cr_write_cr#");
+    }else{
+        return redirect("{$amazon_url}/gp/help/contact/contact.html?ie=UTF8&asin={$asin}&isCBA=&marketplaceID={$marketplace_id}&orderID=&ref_=aag_d_sh&sellerID={$seller_id}");
+    }
 });
 
 Route::controllers([
