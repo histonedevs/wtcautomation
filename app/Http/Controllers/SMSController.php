@@ -91,7 +91,7 @@ class SMSController extends Controller
             make_column('text' , 'messages.text', 'SMS', 'text'),
             make_column('created_at' , 'messages.created_at', 'Sent at', 'text'),
             make_column('visited_at' , 'messages.visited_at', 'Visited', 'text',[],function($record){
-                if($record->visited_at != '0000-00-00 00:00:00') {
+                if($record->visited_at && $record->visited_at != '0000-00-00 00:00:00') {
                     return $record->visited_at;
                 }else{
                     return 'Not visited';
