@@ -70,7 +70,7 @@ class DownloadController extends Controller
         $today = Carbon::now()->format('Y-m-d');
 
         $from = $fromDate->format("M d");
-        $to = $fromDate->format("M d");
+        $to = $toDate->format("M d");
 
         $filename = storage_path("app/downloads/{$today} {$campaign->user->company_name} - {$from} - to - {$to} {$campaign->name} {$type}.csv");
         $heading = array('# of Orders', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Postal Code', 'Country', 'Phone', 'Amazon Email', 'Amazon #', 'Sale Date', 'Product', 'Price', 'Asin');
