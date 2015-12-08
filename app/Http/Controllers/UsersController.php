@@ -39,9 +39,9 @@ class UsersController extends Controller
     public function getIndex(Request $request, Builder $htmlBuilder)
     {
         $columns = [
-            make_column('name' , 'users.name', 'Name', 'text'),
-            make_column('email' , 'users.email', 'Email', 'text'),
-            make_column('user_type' , 'users.user_type', 'User Type', 'text'),
+            make_column('name', 'users.name', 'Name', 'text'),
+            make_column('email', 'users.email', 'Email', 'text'),
+            make_column('user_type', 'users.user_type', 'User Type', 'text'),
             make_column('edit', null, '', null, [], '<a class="btn btn-warning" href="{{url("users/edit/".$id)}}">Edit</a>', null, '0px', null, false),
             make_column('delete', null, '', null, [], '<a class="btn btn-danger" href="{{url("users/delete/".$id)}}">Delete</a>', null, '0px', null, false)
 
@@ -50,10 +50,10 @@ class UsersController extends Controller
         $base_query = DB::table('users')
             ->select('users.*');
 
-        if($this->isAjax($request)){
-            return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
-        }else{
-            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('users'));
+        if ($this->isAjax($request)) {
+            return $this->dataTable($columns, $request, Datatables::of($base_query))->make(true);
+        } else {
+            $data_table = build_data_table($htmlBuilder, $columns, $base_query, url('users'));
             return view('users.index', compact('data_table'));
         }
     }
@@ -76,7 +76,8 @@ class UsersController extends Controller
         return view('users.add_user');
     }
 
-    public function getDelete($id){
+    public function getDelete($id)
+    {
         User::find($id)->delete();
         return redirect('users/index');
     }
