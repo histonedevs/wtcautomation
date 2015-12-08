@@ -11,11 +11,13 @@ use App\Product;
 use App\Variable;
 use Exception;
 use Illuminate\Http\Request;
-
+use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Datatables;
+use yajra\Datatables\Html\Builder;
 
 class SMSController extends Controller
 {
@@ -71,5 +73,43 @@ class SMSController extends Controller
         }
 
         return "ok";
+    }
+
+    /**
+     * @param Request $request
+     * @param Builder $htmlBuilder
+     * @return \BladeView|bool|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function getIndex(Request $request, Builder $htmlBuilder){
+        if(Auth::user()->user_type != 'admin'){
+            return redirect(url('home'));
+        }
+        $columns = [
+            make_column('user_name', 'user_name', 'Sender' , 'text'),
+            make_column('recipient' , 'messages.recipient', 'Recipient', 'text'),
+            make_column('campaign_name', 'campaigns.name', 'Campaign' , 'text'),
+            make_column('text' , 'messages.text', 'SMS', 'text'),
+            make_column('created_at' , 'messages.created_at', 'Sent at', 'text'),
+            make_column('visited_at' , 'messages.visited_at', 'Visited', 'text',[],function($record){
+                if($record->visited_at != '0000-00-00 00:00:00') {
+                    return $record->visited_at;
+                }else{
+                    return 'Not visited';
+                }
+            })
+
+        ];
+
+        $base_query = DB::table('messages')->select('messages.*','campaigns.name as campaign_name','accounts.name as user_name')
+            ->join('campaigns', 'messages.campaign_id' , '=', 'campaigns.id')
+            ->join('accounts', 'messages.user_id' , '=', 'accounts.id');
+
+        if($this->isAjax($request)){
+            return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
+        }else{
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('sms'));
+            return view('accounts.index', compact('data_table'));
+        }
+
     }
 }
