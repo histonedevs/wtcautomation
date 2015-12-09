@@ -35,7 +35,7 @@
     <section id="main">
         <header>
             <img src="{{ $account->logo }}" alt="{{ $account->company_name }}" title="{{ $account->company_name }}"
-                 style="max-width: 300px" class="aligncenter size-full wp-image-3018"/>
+                 style="max-width: 85%;" class="aligncenter size-full wp-image-3018"/>
 
             <div style="clear:both; margin-top:-30px;">&nbsp;</div>
             <h3>Click below to play the video:</h3>
