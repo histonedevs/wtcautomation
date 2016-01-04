@@ -46,6 +46,7 @@ class DownloadController extends Controller
             ->leftJoin('buyers as b', 'b.id', '=', 'so.buyer_id')
             ->leftJoin('locations as l', 'l.id', '=', 'b.location_id')
             ->join('products as p', 'soi.product_id', '=', 'p.id')
+            ->groupBy('b.id')
             ->where('soi.product_id', $campaign->product_id)
             ->where('so.purchased_at', '>=', $fromDate)
             ->where('so.purchased_at', '<=', $toDate)
@@ -61,7 +62,7 @@ class DownloadController extends Controller
             $type = "Standard";
             $results->where(function ($query) {
                 $query->where('soi.item_discount', '=', 0)
-                    ->orWhere('soi.item_discount', null);
+                    ->orWhere('soi.item_discount', NULL);
             });
         }
 
@@ -104,6 +105,7 @@ class DownloadController extends Controller
             ->leftJoin('buyers as b', 'b.id', '=', 'so.buyer_id')
             ->leftJoin('locations as l', 'l.id', '=', 'b.location_id')
             ->join('products as p', 'soi.product_id', '=', 'p.id')
+            ->groupBy('b.id')
             ->where('so.user_id', $child_user)
             ->where('soi.product_id', $product)
             ->where('so.purchased_at', '>=', $fromDate)
