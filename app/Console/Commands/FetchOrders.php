@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Account;
 use App\Location;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Curl\Curl;
 use App\Buyer;
@@ -28,7 +29,7 @@ class FetchOrders extends Command
      *
      * @var string
      */
-    protected $signature = 'api:fetch_orders';
+    protected $signature = 'api:fetch_orders {--user=all}';
 
     /**
      * The console command description.
@@ -96,6 +97,11 @@ class FetchOrders extends Command
         return $this->callAPI("orders/list/{$user->unique_id}/{$last_updated_at}");
     }
 
+    private function getMoreOrdersNew($user_id,$date){
+        print "Will get after : ".$date."\n";
+        return $this->callAPI("orders/list/{$user_id}/{$date->timestamp}");
+    }
+
     /**
      * @throws \Exception
      */
@@ -111,69 +117,140 @@ class FetchOrders extends Command
 
 
     private function getProducts(){
-        foreach (Account::all() as $user) {
+        $user = $this->option('user');
+        if($user == "all"){
+            foreach (Account::all() as $user) {
+                try {
+                    foreach ($this->callAPI("products/list/{$user->unique_id}") as $record) {
+                        $record->user_id = $user->id;
+                        $this->saveItem('App\Product', $record);
+                    }
+                }catch (\Exception $ex){
+                    if($ex->getCode() == INVALID_USER){
+                        continue;
+                    }else{
+                        print $ex->getTraceAsString();
+                        throw $ex;
+                    }
+                }
+            }
+        }else if(is_numeric($user)){
             try {
-                foreach ($this->callAPI("products/list/{$user->unique_id}") as $record) {
-                    $record->user_id = $user->id;
+                foreach ($this->callAPI("products/list/{$user}") as $record) {
+                    $record->user_id = Account::where('unique_id',$user)->first()->id;
                     $this->saveItem('App\Product', $record);
                 }
             }catch (\Exception $ex){
                 if($ex->getCode() == INVALID_USER){
-                    continue;
+                    print "Invalid User ID provided";
                 }else{
                     print $ex->getTraceAsString();
                     throw $ex;
                 }
             }
         }
+
     }
 
     /**
      *
      */
     private function getOrders(){
-        $users = Account::all();
-        foreach ($users as $user) {
-            try {
-                $r = $this->getMoreOrders($user);
-                while (count($r) > 0) {
-                    foreach ($r as $record) {
-                        if ($record->buyer_id && $record->buyer) {
-                            if ($record->buyer->location) {
-                                $location = $this->saveItem('App\Location', $record->buyer->location);
-                                $record->buyer->location_id = $location->id;
-                            }
-
-                            $record->buyer->user_id = Account::whereUniqueId($record->buyer->user_id)->first()->id;
-                            $buyer = $this->saveItem('App\Buyer', $record->buyer);
-                            $record->buyer_id = $buyer->id;
-                        }
-
-                        $record->user_id = Account::whereUniqueId($record->user_id)->first()->id;
-                        $sale = $this->saveItem('App\SaleOrder', $record);
-
-                        if ($record->sale_order_items) {
-                            foreach ($record->sale_order_items as $row) {
-                                if ($row->product) {
-                                    $row->product->user_id = $sale->user_id;
-                                    $product = $this->saveItem('App\Product', $row->product);
-                                    $row->product_id = $product->id;
+        $user = $this->option('user');
+        if($user == "all"){
+            $users = Account::all();
+            foreach ($users as $user) {
+                try {
+                    $r = $this->getMoreOrders($user);
+                    while (count($r) > 0) {
+                        foreach ($r as $record) {
+                            if ($record->buyer_id && $record->buyer) {
+                                if ($record->buyer->location) {
+                                    $location = $this->saveItem('App\Location', $record->buyer->location);
+                                    $record->buyer->location_id = $location->id;
                                 }
-                                $row->sale_order_id = $sale->id;
-                                $sale_order_item = $this->saveItem('App\SaleOrderItem', $row);
+
+                                $record->buyer->user_id = Account::whereUniqueId($record->buyer->user_id)->first()->id;
+                                $buyer = $this->saveItem('App\Buyer', $record->buyer);
+                                $record->buyer_id = $buyer->id;
+                            }
+
+                            $record->user_id = Account::whereUniqueId($record->user_id)->first()->id;
+                            $sale = $this->saveItem('App\SaleOrder', $record);
+
+                            if ($record->sale_order_items) {
+                                foreach ($record->sale_order_items as $row) {
+                                    if ($row->product) {
+                                        $row->product->user_id = $sale->user_id;
+                                        $product = $this->saveItem('App\Product', $row->product);
+                                        $row->product_id = $product->id;
+                                    }
+                                    $row->sale_order_id = $sale->id;
+                                    $sale_order_item = $this->saveItem('App\SaleOrderItem', $row);
+                                }
                             }
                         }
+
+                        $r = $this->getMoreOrders($user);
+                    }
+                }catch (\Exception $ex){
+                    if($ex->getCode() == INVALID_USER){
+                        continue;
+                    }else{
+                        print $ex->getTraceAsString();
+                        throw $ex;
+                    }
+                }
+            }
+        }else if(is_numeric($user)){
+            $this->getOrdersNew($user);
+        }
+
+    }
+
+    private function getOrdersNew($user_id){
+        $user = Account::find($user_id);
+        $date = Carbon::parse("2015-01-01 00:00:00");
+        try {
+            $r = $this->getMoreOrdersNew($user_id,$date);
+            while (count($r) > 0) {
+                foreach ($r as $record) {
+                    if ($record->buyer_id && $record->buyer) {
+                        if ($record->buyer->location) {
+                            $location = $this->saveItem('App\Location', $record->buyer->location);
+                            $record->buyer->location_id = $location->id;
+                        }
+
+                        $record->buyer->user_id = Account::whereUniqueId($record->buyer->user_id)->first()->id;
+                        $buyer = $this->saveItem('App\Buyer', $record->buyer);
+                        $record->buyer_id = $buyer->id;
                     }
 
-                    $r = $this->getMoreOrders($user);
+                    $record->user_id = Account::whereUniqueId($record->user_id)->first()->id;
+                    $sale = $this->saveItem('App\SaleOrder', $record);
+
+                    if ($record->sale_order_items) {
+                        foreach ($record->sale_order_items as $row) {
+                            if ($row->product) {
+                                $row->product->user_id = $sale->user_id;
+                                $product = $this->saveItem('App\Product', $row->product);
+                                $row->product_id = $product->id;
+                            }
+                            $row->sale_order_id = $sale->id;
+                            $sale_order_item = $this->saveItem('App\SaleOrderItem', $row);
+                        }
+                    }
+                    $date = Carbon::parse($record->last_updated_at);
+
                 }
-            }catch (\Exception $ex){
-                if($ex->getCode() == INVALID_USER){
-                    continue;
-                }else{
-                    print $ex->getTraceAsString();
-                    throw $ex;
-                }
+                $r = $this->getMoreOrdersNew($user_id, $date);
+            }
+        }catch (\Exception $ex){
+            if($ex->getCode() == INVALID_USER){
+
+            }else{
+                print $ex->getTraceAsString();
+                throw $ex;
             }
         }
     }
