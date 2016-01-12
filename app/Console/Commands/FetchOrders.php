@@ -188,7 +188,8 @@ class FetchOrders extends Command
             $users = Account::all();
 
         }else if(is_numeric($user)){
-            $users = [Account::findOrFail($user)];
+            print $user. "\n";
+            $users = [Account::find($user)];
         }
 
         foreach ($users as $user) {
