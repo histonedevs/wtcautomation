@@ -175,6 +175,7 @@ class FetchOrders extends Command
             $date = Carbon::parse($record->last_updated_at);
         }
 
+        sleep(1);
         return $date;
     }
 
