@@ -88,6 +88,13 @@
 <script>
     var APP_URL = '{{ url('/') }}';
     $('ul.nav a[href="' + window.location + '"]').parents("li").addClass('active');
+
+    function getRowData (tbl_name, row) {
+        if(tbl_name in window.LaravelDataTables){
+            return window.LaravelDataTables[tbl_name].row(row).data();
+        }
+        return false;
+    }
 </script>
 @yield('page-script')
 @include("analytics")

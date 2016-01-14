@@ -60,6 +60,32 @@
         </div>
     </div>
 
+    {{--edit campaign modal--}}
+    <div class="modal fade" id="updateCampaignModal" tabindex="-1" role="dialog" aria-labelledby="createCampaignModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="createCampaignModalLabel">Edit Campaign</h4>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" accept-charset="UTF-8" id="updateCampaignForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label class="control-label">Enter Campaign Name</label>
+                            <input type="text" class="form-control" name="camp_name" id="camp_name">
+                        </div>
+                        <input value="2" class="form-control" id="capaign_id" name="campaign_id" type="hidden">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary updateCampaign">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('page-script')
@@ -90,6 +116,18 @@
             window.discounted = $(this).attr("discount");
             console.log("discounted = "+ window.discounted);
             $("#downloadCSVModal").modal();
+        })
+
+        $(document).on("click" , ".btn_edit_campaign", function (e) {
+            e.preventDefault();
+            var row = $(this).closest('tr');
+
+            var rowData = getRowData("table_campaigns", row)
+            console.log(rowData);
+           $("#updateCampaignModal #camp_name").val(rowData.campaign_name);
+            $("#updateCampaignForm #capaign_id").val( $(this).attr("campaign_id"));
+            console.log("btn_edit_campaign clicked");
+            $("#updateCampaignModal").modal();
         })
         
         $(document).ready(function () {
@@ -162,7 +200,21 @@
             $("#dateTo").on("dp.change", function (e) {
                 $('#dateFrom').data("DateTimePicker").maxDate(e.date);
             });
-            
+
+            $("#updateCampaignModal .updateCampaign").click(function () {
+                var campName = $("#updateCampaignModal #camp_name").val().trim();
+                $.ajax({
+                    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+                    url         : '{{ url("campaigns/edit") }}', // the url where we want to POST
+                    data        : $("#updateCampaignModal #updateCampaignForm").serialize(), // our data object
+                    success:function(r){
+                        window.LaravelDataTables.table_campaigns.ajax.reload();
+                        $("#updateCampaignModal").modal("hide");
+                    }
+
+                });
+            });
         });
     </script>
 @endsection
+

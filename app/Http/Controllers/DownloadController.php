@@ -73,7 +73,9 @@ class DownloadController extends Controller
         $from = $fromDate->format("M d");
         $to = $toDate->format("M d");
 
-        $filename = storage_path("app/downloads/{$today} {$campaign->user->company_name} - {$from} - to - {$to} {$campaign->name} {$type}.csv");
+        $filename = "{$today} {$campaign->user->company_name} - {$from} - to - {$to} - {$campaign->name} - {$type}";
+        $filename = storage_path("app/downloads/").preg_replace('/[^A-Za-z0-9\-]/', '', $filename).".csv";
+
         $heading = array('# of Orders', 'First Name', 'Last Name', 'Address', 'City', 'State', 'Postal Code', 'Country', 'Phone', 'Amazon Email', 'Amazon #', 'Sale Date', 'Product', 'Price', 'Asin');
 
         $fp = fopen($filename, 'w');
