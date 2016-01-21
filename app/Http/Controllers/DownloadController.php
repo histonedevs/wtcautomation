@@ -38,6 +38,7 @@ class DownloadController extends Controller
 
         $campaign = Campaign::find($request->campaign_id);
 
+
         $results = DB::table('sale_order_items as soi')
             ->select([
                 'b.orders_count', 'b.first_name', 'b.last_name', 'b.address1', 'b.city', 'b.state', 'b.zip', 'l.country', 'b.phone', 'b.email', 'so.amazon_order_id', DB::raw("CONVERT_TZ(so.purchased_at,'+00:00','-08:00') AS purchased_at"), 'p.title', 'soi.item_price as price', 'p.asin'
@@ -57,13 +58,10 @@ class DownloadController extends Controller
         $type = "";
         if ($request->discounted) {
             $type = "Promo";
-            $results->where('soi.item_discount', '>', 0);
+            $results = $results->whereRaw('(soi.item_discount is not null and (soi.item_discount / item_price) >= 0.5)');
         } else {
             $type = "Standard";
-            $results->where(function ($query) {
-                $query->where('soi.item_discount', '=', 0)
-                    ->orWhere('soi.item_discount', NULL);
-            });
+            $results = $results->whereRaw('(soi.item_discount is null or (soi.item_discount / item_price) < 0.5)');
         }
 
         $results = $results->get();
