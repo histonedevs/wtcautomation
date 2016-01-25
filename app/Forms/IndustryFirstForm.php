@@ -27,7 +27,7 @@ class IndustryFirstForm extends Form
 
         $this->add('sms_text', 'textarea', ['rules' => 'required']);
         $this->add('recipient' , 'text', ['rules' => 'required']);
-        $this->add('sender' , 'text', ['rules' => 'required', 'value' => '647-628-4592']);
+        $this->add('sender' , 'text', ['rules' => 'required', 'value' => '+16476284592']);
         $this->add('Send', 'submit');
     }
 }
