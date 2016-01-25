@@ -24,7 +24,7 @@ class Twilio
     }
 
 
-    public static function sendSMS($to, $message){
+    public static function sendSMS($to, $message, $sender=null){
         $http = new Services_Twilio_TinyHttp(
             'https://api.twilio.com',
             array('curlopts' => array(
@@ -33,12 +33,18 @@ class Twilio
             ))
         );
 
+        $sender = $sender ? $sender : env('TWILIO_SENDER');
+
         $client = new Services_Twilio(
             env('TWILIO_SID'),
             env('TWILIO_TOKEN'), "2010-04-01",
             $http
         );
 
-        return $client->account->sms_messages->create(env('TWILIO_SENDER'), $to, $message, array());
+        return $client->account->sms_messages->create(
+            $sender,
+            $to,
+            $message,
+            array());
     }
 }

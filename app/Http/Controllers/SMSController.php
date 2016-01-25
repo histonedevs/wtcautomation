@@ -17,10 +17,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Datatables;
+use Kris\LaravelFormBuilder\FormBuilderTrait;
+use Laracasts\Flash\Flash;
 use yajra\Datatables\Html\Builder;
 
 class SMSController extends Controller
 {
+    use FormBuilderTrait;
+
     public function __construct()
     {
         $this->middleware("auth");
@@ -127,5 +131,24 @@ class SMSController extends Controller
             return view('accounts.index', compact('data_table'));
         }
 
+    }
+
+    public function getIndustryFirst(){
+        $form = $this->form('App\Forms\IndustryFirstForm', ['method' => 'POST']);
+        return view('sms.industry_first', compact('form'));
+    }
+
+    public function postIndustryFirst(Request $request){
+        $form = $this->form('App\Forms\IndustryFirstForm', ['method' => 'POST']);
+        if($form->validate()){
+            try {
+                Twilio::sendSMS($request->get('recipient') , $request->get('sms_text'), $request->get('sender'));
+                Session::flash('success', "Sent");
+            } catch (Exception $exception) {
+                Session::flash('error', $exception->getMessage());
+            }
+        }
+
+        return view('sms.industry_first', compact('form'));
     }
 }

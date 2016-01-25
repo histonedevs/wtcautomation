@@ -45,10 +45,10 @@
                         </li>
                         @if(Auth::user()->user_type == 'admin')
                             <li>
-                                <a href="#" data-toggle="dropdown" class="dropdown-toggle">Messages<span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a href="{{ url ('sms/index') }}">All</a></li>
-                                </ul>
+                                <a href="{{ url ('sms/index') }}">Messages</a>
+                            </li>
+                            <li>
+                                <a href="{{ url ('sms/industry-first') }}" >Industry First</a>
                             </li>
                         @endif
                     @elseif(Auth::user()->user_type == 'operator')
