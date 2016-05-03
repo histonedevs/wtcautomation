@@ -38,10 +38,18 @@ class DownloadController extends Controller
 
         $campaign = Campaign::find($request->campaign_id);
 
+        $price_column = 'soi.item_price AS price';
+        if ($request->discounted) {
+            $price_column = '(soi.item_price - IF(soi.item_discount, soi.item_discount, 0)) AS price';
+        }
 
         $results = DB::table('sale_order_items as soi')
             ->select([
-                'b.orders_count', 'b.first_name', 'b.last_name', 'b.address1', 'b.city', 'b.state', 'b.zip', 'l.country', 'b.phone', 'b.email', 'so.amazon_order_id', DB::raw("CONVERT_TZ(so.purchased_at,'+00:00','-08:00') AS purchased_at"), 'p.title', 'soi.item_price as price', 'p.asin'
+                'b.orders_count', 'b.first_name', 'b.last_name', 'b.address1',
+                'b.city', 'b.state', 'b.zip', 'l.country', 'b.phone', 'b.email',
+                'so.amazon_order_id',
+                DB::raw("CONVERT_TZ(so.purchased_at,'+00:00','-08:00') AS purchased_at"),
+                'p.title', DB::raw($price_column), 'p.asin'
             ])
             ->join('sale_orders as so', 'soi.sale_order_id', '=', 'so.id')
             ->leftJoin('buyers as b', 'b.id', '=', 'so.buyer_id')
