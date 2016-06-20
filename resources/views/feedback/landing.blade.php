@@ -45,7 +45,7 @@
 
             <h2>Thank you!</h2>
             <p>Here is Your Customer Appreciation Gift.<br/>Record this code for your next purchase:</p>
-            <h1 style="text-decoration: underline;">{{ $coupon_code }}</h1>
+            <h1 style="text-decoration: underline;">{{ $message->couponCode }}</h1>
 
             <br/><br/>
 

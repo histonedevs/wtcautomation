@@ -33,6 +33,7 @@ class SMSController extends Controller
     public function getCarrier(Request $request){
         $this->validate($request, [
             'phoneNumber' => 'required',
+            'couponCode' => 'required'
         ]);
 
         $carrier = Twilio::lookup($request->phoneNumber);
@@ -52,6 +53,7 @@ class SMSController extends Controller
         $this->validate($request, [
             'campaign_id' => 'required',
             'phoneNumber' => 'required',
+            'couponCode' => 'required'
         ]);
 
         /*
@@ -66,6 +68,7 @@ class SMSController extends Controller
         $stored_msg = Message::create([
             'user_id' => Auth::user()->id,
             'recipient' => $request->get('phoneNumber'),
+            'couponCode' => $request->get('couponCode'),
             'campaign_id' => $campaign->id,
         ]);
 
@@ -78,6 +81,7 @@ class SMSController extends Controller
         $message = $sms_text->value;
         $message = str_replace("[COMPANY_NAME]" , $campaign->user->company_name , $message);
         $message = str_replace("[URL]" , $short_url , $message);
+        $message = str_replace("[CODE]", $request->get('couponCode'), $message);
 
         $stored_msg->text = $message;
         $stored_msg->visited_at = null;

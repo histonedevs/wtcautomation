@@ -20,12 +20,11 @@ Route::get('/r/{message_id}', function($message_id){
 
     $message = \App\Message::find($message_id);
     $account = $message->campaign->user;
-    $coupon_code = mt_rand(1000000, 9999999);
 
     $message->visited_at = \Carbon\Carbon::now();
     $message->save();
 
-    return view('feedback.landing', compact('account', 'message_id', 'coupon_code'));
+    return view('feedback.landing', compact('account', 'message_id'));
 });
 
 Route::get('/v/{message_id}/{stars}', function($message_id , $stars){

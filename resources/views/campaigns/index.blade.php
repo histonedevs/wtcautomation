@@ -16,6 +16,10 @@
                         <label class="control-label">Enter Phone Number</label>
                         <input type="text" class="form-control" id="phoneNumber">
                     </div>
+                    <div class="form-group">
+                        <label class="control-label">Enter Coupon Code</label>
+                        <input type="text" class="form-control" id="couponCode">
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default pull-left resetSMS">Reset</button>
@@ -133,14 +137,19 @@
         $(document).ready(function () {
             $("#sendSMSModal .sendSMS").click(function () {
                 var phoneNumber  = $("#phoneNumber").val().trim();
+                var couponCode = $('#couponCode').val().trim();
                 if(phoneNumber){
-                    $.post("{{ url("sms") }}", {campaign_id : window.selected_campaign, phoneNumber: phoneNumber}, function (r) {
-                        if(r == "ok"){
-                            $("#sendSMSModal").modal("hide");
-                        }else{
-                            alert(r);
-                        }
-                    });
+                    if(couponCode) {
+                        $.post("{{ url("sms") }}", {campaign_id : window.selected_campaign, phoneNumber: phoneNumber, couponCode: couponCode}, function (r) {
+                            if(r == "ok"){
+                                $("#sendSMSModal").modal("hide");
+                            }else{
+                                alert(r);
+                            }
+                        });
+                    } else {
+                        alert("Please enter a coupon code");
+                    }
                 }else{
                     alert("Please enter a phone number");
                 }
@@ -148,16 +157,22 @@
 
             $("#sendSMSModal .testSMS").click(function () {
                 var phoneNumber  = $("#phoneNumber").val().trim();
+                var couponCode = $('#couponCode').val().trim();
                 if(phoneNumber){
-                    $.get("{{ url("sms/carrier") }}", {phoneNumber: phoneNumber}, function (r) {
-                        if(r == "ok"){
-                            $("#sendSMSModal .testSMS").hide();
-                            $("#sendSMSModal .sendSMS").show();
-                            $("#phoneNumber").prop("disabled", true);
-                        }else{
-                            alert(r);
-                        }
-                    });
+                    if(couponCode) {
+                        $.get("{{ url("sms/carrier") }}", {phoneNumber: phoneNumber, couponCode: couponCode}, function (r) {
+                            if(r == "ok"){
+                                $("#sendSMSModal .testSMS").hide();
+                                $("#sendSMSModal .sendSMS").show();
+                                $("#phoneNumber").prop("disabled", true);
+                            }else{
+                                alert(r);
+                            }
+                        });
+                    } else {
+                        alert("Please enter a coupon code");
+                    }
+
                 }else{
                     alert("Please enter a phone number");
                 }
