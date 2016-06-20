@@ -120,7 +120,8 @@ class FeedbackController extends Controller
         $negResponse->suggestion = $request->suggestion;
 
         $negResponse->save();
-        
+
+        /*
         $message = Message::find($request->message_id);
         $account = $message->campaign->user;
 
@@ -133,7 +134,8 @@ class FeedbackController extends Controller
                     ->subject('Customer Feedback');
             }
         );
-
+        
+        */
         return redirect('/');
     }
 }
