@@ -52,7 +52,7 @@
                             </li>
                         @endif
                         <li>
-                            <a href="{{ url ('/') }}">Responses</a>
+                            <a href="{{ url ('feedback') }}">Negative Feedbacks</a>
                         </li>
                     @elseif(Auth::user()->user_type == 'operator')
                         <li>

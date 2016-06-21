@@ -6,7 +6,9 @@ use Mail;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use Illuminate\Support\Facades\DB;
+use Datatables;
+use yajra\Datatables\Html\Builder;
 use App\Message;
 use App\NegativeResponse;
 
@@ -17,9 +19,39 @@ class FeedbackController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getIndex(Request $request, Builder $htmlBuilder, $user_id = Null)
     {
-        //
+        $columns = [
+            make_column('customer_name', 'negative_responses.customer_name', 'Customer Name', 'text'),
+            make_column('customer_email', 'negative_responses.customer_email', 'Customer Email' , 'text'),
+            make_column('product_title', 'products.title', 'Product Title', 'text'),
+            make_column('campaign_name' , 'campaigns.name', 'Campaign Name', 'text'),
+//            make_column('sms', null, '', null, [], '<a class="btn btn-primary sendSmsBtn" href="#" campaign_id="{{$id}}">Send SMS</a>', null, '0px', null, false),
+        ];
+
+        $base_query = DB::table('negative_responses')->select(
+            [   'negative_responses.id', 'negative_responses.customer_name as customer_name',
+                'negative_responses.customer_email as customer_email',
+                'campaigns.name as campaign_name', 'products.title as product_title']
+        )
+            ->join('messages', 'negative_responses.message_id' , '=' , 'messages.id')
+            ->join('campaigns', 'messages.campaign_id' , '=' , 'campaigns.id')
+            ->join('products', 'campaigns.product_id' , '=' , 'products.id');
+
+        if($user_id){
+            $base_query->join('accounts', 'campaigns.user_id' , '=' , 'accounts.id')
+                ->where(function($query) use($user_id){
+                    $query->where('campaigns.user_id',$user_id)
+                        ->orWhere('accounts.parent_id',$user_id);
+                });
+        }
+
+        if($this->isAjax($request)){
+            return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
+        } else{
+            $data_table = build_data_table($htmlBuilder , $columns , $base_query , url('feedback/index/'.$user_id));
+            return view('feedback.index', compact('data_table'));
+        }
     }
 
     /**
@@ -134,7 +166,6 @@ class FeedbackController extends Controller
                     ->subject('Customer Feedback');
             }
         );
-        
         */
         return redirect('/');
     }
