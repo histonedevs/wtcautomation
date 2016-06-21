@@ -62,6 +62,17 @@
                         <span style="font-size:18px;font-weight:bold;">I hate it</span>
                     </a>
                 </p>
+
+                <br/>
+                <h4>Email me this to do on my computer:</h4>
+                {!! Form::open(array('url' => 'feedback/email-feedback', 'method' => 'POST', 'class' => 'form-inline')) !!}
+                    <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                        <input type="email" name="email" placeholder="Email" class="form-control" />
+                        <input type="hidden" name="message_id" value="{{$message_id}}"/>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                {!! Form::close() !!}
+
             </header>
         </section>
     </div>

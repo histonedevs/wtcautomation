@@ -169,4 +169,27 @@ class FeedbackController extends Controller
         */
         return redirect('/');
     }
+
+    public function postEmailFeedback(Request $request)
+    {
+        $this->validate($request, [
+            'email' => 'required',
+            'message_id' => 'required'
+        ]);
+
+        $message = Message::find($request->message_id);
+        $account = $message->campaign->user;
+
+        // Send feedback in E-mail
+        Mail::send('feedback.email.sendinemail', ['message_id' => $request->message_id],
+            function ($message) use ($request, $account) {
+                $message
+                    ->from($account->email, $account->name)
+                    ->to($request->get('email'), '')
+                    ->subject('Campaign Feedback');
+            }
+        );
+
+        return redirect('/');
+    }
 }
