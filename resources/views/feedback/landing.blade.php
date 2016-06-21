@@ -44,17 +44,18 @@
             <div style="clear:both; margin-top:-30px;">&nbsp;</div>
 
             <h2>Thank you!</h2>
-            <p>Here is Your Customer Appreciation Gift.<br/>Record this code for your next purchase:</p>
-            <h1 style="text-decoration: underline;">{{ $message->couponCode }}</h1>
-
+            @if(!empty($message->couponCode))
+                <p>Here is Your Customer Appreciation Gift.<br/>Record this code for your next purchase:</p>
+                <h1 style="text-decoration: underline;">{{ $message->couponCode }}</h1>
+            @endif
             <br/><br/>
 
             <div style="clear:both; margin-top:-30px;">&nbsp;</div>
 
             <h2>Would you recommend us?</h2>
             <p>
-                <a href="{{ url("/feedback/recommended/{$message_id}") }}" class="btn btn-primary">YES</a>
-                <a href="{{ url("/feedback/rejected/{$message_id}") }}" class="btn btn-default">NO</a>
+                <a href="{{ url("/feedback/recommended/{$message->id}") }}" class="btn btn-primary">YES</a>
+                <a href="{{ url("/feedback/rejected/{$message->id}") }}" class="btn btn-default">NO</a>
             </p>
 
             <br/>

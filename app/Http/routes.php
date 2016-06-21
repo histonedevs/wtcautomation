@@ -24,7 +24,7 @@ Route::get('/r/{message_id}', function($message_id){
     $message->visited_at = \Carbon\Carbon::now();
     $message->save();
 
-    return view('feedback.landing', compact('account', 'message_id', 'message'));
+    return view('feedback.landing', compact('account', 'message'));
 });
 
 Route::get('/v/{message_id}/{stars}', function($message_id , $stars){
