@@ -30,6 +30,7 @@ class CampaignController extends Controller
             make_column('campaign_name', 'campaigns.name', 'Campaign Name', 'text'),
             make_column('product_title', 'products.title', 'Product Name' , 'text'),
             make_column('asin' , 'products.asin', 'ASIN', 'text'),
+            make_column('campaign_code', 'campaigns.couponCode', 'Coupon Code', 'text'),
             make_column('sms', null, '', null, [], '<a class="btn btn-primary sendSmsBtn" href="#" campaign_id="{{$id}}">Send SMS</a>', null, '0px', null, false),
         ];
 
@@ -41,7 +42,7 @@ class CampaignController extends Controller
 
 
         $base_query = DB::table('campaigns')->select(
-            ['campaigns.name as campaign_name', 'campaigns.id', 'products.title as product_title', 'products.asin']
+            ['campaigns.name as campaign_name', 'campaigns.id', 'campaigns.couponCode as campaign_code', 'products.title as product_title', 'products.asin']
         )->join('products', 'campaigns.product_id' , '=' , 'products.id');
 
         if($user_id){
@@ -222,6 +223,7 @@ class CampaignController extends Controller
     public function postEdit(Request $request){
         $campaign = Campaign::find($request->get('campaign_id'));
         $campaign->name = $request->get('camp_name');
+        $campaign->couponCode = $request->get('camp_code');
         $campaign->save();
         return 'ok';
     }

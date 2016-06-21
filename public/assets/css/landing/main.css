@@ -619,7 +619,7 @@ button,
 	background-color: transparent;
 	border-radius: 4px;
 	border: solid 1px #c8cccf;
-	color: #414f57 !important;
+	/*color: #414f57 !important;*/
 	cursor: pointer;
 	text-align: center;
 	text-decoration: none;
@@ -631,8 +631,8 @@ input[type="reset"]:hover,
 input[type="button"]:hover,
 button:hover,
 .button:hover {
-	border-color: #ff7496;
-	color: #ff7496 !important;
+	/*border-color: #ff7496;*/
+	/*color: #ff7496 !important;*/
 }
 
 input[type="submit"].icon,

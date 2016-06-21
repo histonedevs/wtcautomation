@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddCouponcodeToMessagesTable extends Migration
+class AddCouponcodeToCampaignTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class AddCouponcodeToMessagesTable extends Migration
      */
     public function up()
     {
-        Schema::table('messages', function (Blueprint $table) {
+        Schema::table('campaigns', function (Blueprint $table) {
             $table->string('couponCode')->nullable();
         });
     }
@@ -24,7 +24,7 @@ class AddCouponcodeToMessagesTable extends Migration
      */
     public function down()
     {
-        Schema::table('messages', function (Blueprint $table) {
+        Schema::table('campaigns', function (Blueprint $table) {
             $table->dropColumn('couponCode');
         });
     }

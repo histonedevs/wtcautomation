@@ -51,6 +51,9 @@
                                 <a href="{{ url ('sms/industry-first') }}" >Industry First</a>
                             </li>
                         @endif
+                        <li>
+                            <a href="{{ url ('/') }}">Responses</a>
+                        </li>
                     @elseif(Auth::user()->user_type == 'operator')
                         <li>
                             <a href="#" data-toggle="dropdown" class="dropdown-toggle">Campaigns<span class="caret"></span></a>

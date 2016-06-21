@@ -78,6 +78,10 @@
                             <label class="control-label">Enter Campaign Name</label>
                             <input type="text" class="form-control" name="camp_name" id="camp_name">
                         </div>
+                        <div class="form-group">
+                            <label class="control-label">Enter Coupon Code</label>
+                            <input type="text" class="form-control" name="camp_code" id="camp_code">
+                        </div>
                         <input value="2" class="form-control" id="capaign_id" name="campaign_id" type="hidden">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     </form>
@@ -112,6 +116,11 @@
             $("#couponCode").val("");
 
             resetSMSModal();
+
+            var row = $(this).closest('tr');
+            var rowData = getRowData("table_campaigns", row);
+            $("#couponCode").val(rowData.campaign_code);
+
             $("#sendSMSModal").modal();
         });
 
@@ -130,7 +139,8 @@
 
             var rowData = getRowData("table_campaigns", row)
             console.log(rowData);
-           $("#updateCampaignModal #camp_name").val(rowData.campaign_name);
+            $("#updateCampaignModal #camp_name").val(rowData.campaign_name);
+            $("#updateCampaignModal #camp_code").val(rowData.campaign_code);
             $("#updateCampaignForm #capaign_id").val( $(this).attr("campaign_id"));
             console.log("btn_edit_campaign clicked");
             $("#updateCampaignModal").modal();
@@ -220,6 +230,7 @@
 
             $("#updateCampaignModal .updateCampaign").click(function () {
                 var campName = $("#updateCampaignModal #camp_name").val().trim();
+                var campCode = $("#updateCampaignModal #camp_code").val().trim();
                 $.ajax({
                     type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
                     url         : '{{ url("campaigns/edit") }}', // the url where we want to POST
