@@ -99,6 +99,7 @@
             $("#sendSMSModal .testSMS").show();
             $("#sendSMSModal .sendSMS").hide();
             $("#phoneNumber").val("").prop("disabled", false);
+            $("#couponCode").val("").prop("disabled", false);
         }
 
         $(document).on("click", ".resetSMS", resetSMSModal);
@@ -108,6 +109,7 @@
 
             window.selected_campaign = $(this).attr("campaign_id");
             $("#phoneNumber").val("");
+            $("#couponCode").val("");
 
             resetSMSModal();
             $("#sendSMSModal").modal();
