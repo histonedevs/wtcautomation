@@ -6,19 +6,21 @@
     <div id="wrapper">
         <!-- Main -->
         <section id="main" class="col-sm-9 col-md-9">
-            <header>
+            <header style="margin-bottom: 25px;">
                 <img src="{{ $account->logo }}" alt="{{ $account->company_name }}" title="{{ $account->company_name }}"
                      style="max-width: 85%;" class="aligncenter size-full wp-image-3018"/>
 
+            </header>
+
                 <div class="col-sm-6 col-md-6">
-                    <iframe width="100%" src="https://www.youtube.com/embed/fG3SDgWezNg?rel=0&showinfo=0&autoplay=1" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>
+                    <iframe width="100%" height="200px" src="https://www.youtube.com/embed/fG3SDgWezNg" frameborder="0" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>
 
                     <p>We are really sorry your experience was not great.</p>
                     <p>Our company is focused on every customer and client having a first class experience. Unfortunately, sometimes companies make mistakes and it looks like your experience wasn't as good as we would like it to be.</p>
                     <p>We want the opportunity to correct our mistake. Please contact us directly and let us know how we can turn your negative experience into a 5-star first class experience.</p>
 
                     @if(!empty($account->company_name))
-                        <a href="#" role="button" class="btn btn-default">{{ $account->company_name }}</a>
+                        <p><strong>{{ $account->company_name }}</strong></p>
                     @endif
                 </div>
 
@@ -52,7 +54,7 @@
                         </div>
                     {!! Form::close() !!}
                 </div>
-            </header>
+
         </section>
     </div>
 

@@ -23,20 +23,20 @@
                 <h2>Would you recommend us?</h2>
                 <p>
                     <a href="{{ url("/feedback/recommended/{$message->id}") }}" class="btn btn-primary">YES</a>
-                    <span style="margin-right:10px;">&nbsp;</span>
+                    <span style="margin-right:100px;">&nbsp;</span>
                     <a href="{{ url("/feedback/rejected/{$message->id}") }}" class="btn btn-default">NO</a>
                 </p>
 
                 <br/>
 
-                <label><input type="checkbox" name="agree" value="1" checked/> Agree to be contacted/TOS</label>
+                <span><label><input type="checkbox" name="agree" value="1" checked/> Agree to be contacted/ <a href="#" id="tos" style="color: blue">TOS</a></label></span>
 
                 <br/><br/>
             </header>
         </section>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" data-backdrop="static" aria-hidden="true">
+    <div class="modal fade" id="tosModal" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -45,7 +45,7 @@
                 <div class="modal-body" style="max-height: calc(100vh - 210px); overflow-y: auto;">
                     <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <h2>ACCEPTANCE</h2>
-                        <p>When you sign-in with us, you are giving {{ $account->company_name }} your permission and consent to send you email and/or SMS text messages. By checking the Terms and Conditions box and by signing in you automatically confirm that you accept all terms in this agreement.</p>
+                        <p>When you sign-in with us, you are giving <strong>{{ $account->company_name }}</strong> your permission and consent to send you email and/or SMS text messages. By checking the Terms and Conditions box and by signing in you automatically confirm that you accept all terms in this agreement.</p>
 
                         <h2>SERVICE</h2>
                         <p>This is a free service provided by us to our VIP clients of which you are included. We provide a service that currently allows you to receive requests for feedback, company information, promotional information, company alerts, coupons, discounts and other notifications to your email address and/or cellular phone or device. Email delivery is free of any charges. SMS will be subject to your regular SMS rates, most carriers now have free inbound SMS messages associated with the display or delivery of each SMS text message sent to you by us.</p>
@@ -57,12 +57,12 @@
                         <p>The information provided during this registration is kept private and confidential, and will never be distributed, copied, sold, traded or posted in any way, shape or form. This is our guarantee.</p>
 
                         <h2>DISCLAIMER OF WARRANTIES</h2>
-                        <p>You expressly understand and agree that: No advice or information, whether oral or written, obtained by you from {{ $account->company_name }} or through or from the service shall create any warranty not expressly stated in the TOS.</p>
+                        <p>You expressly understand and agree that: No advice or information, whether oral or written, obtained by you from <strong>{{ $account->company_name }}</strong> or through or from the service shall create any warranty not expressly stated in the TOS.</p>
 
                         <h2>OPT-OUT</h2>
-                        <p>You may at any time opt out of notices from {{ $account->company_name }} by the following two options:</p>
+                        <p>You may at any time opt out of notices from <strong>{{ $account->company_name }}</strong> by the following two options:</p>
                         <ol>
-                            <li>Email us at (company@company.com) with “Unsubscribe” in the subject line.</li>
+                            <li>Email us at <strong>({{ $account->contact_email }})</strong> with “Unsubscribe” in the subject line.</li>
                             <li>Text “Stop” to any message from us.</li>
                         </ol>
 
@@ -86,10 +86,8 @@
     <!-- Scripts -->
     <script>
         $(document).ready(function(){
-            $('input[type="checkbox"]').on('change', function(e){
-//                if(e.target.checked){
-                    $('#myModal').modal();
-//                }
+            $('#tos').on('click', function(e){
+                $('#tosModal').modal();
             });
         });
     </script>

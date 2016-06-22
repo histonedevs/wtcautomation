@@ -46,7 +46,7 @@
         </script>
     @show
 
-@include("analytics")
+    @include("analytics")
 
 </body>
 </html>

@@ -166,7 +166,7 @@ class FeedbackController extends Controller
             }
         );
 
-        return redirect('/');
+        print "An Email Has Been Sent to Manager. Thanks";
     }
 
     public function postEmailFeedback(Request $request)
@@ -189,6 +189,6 @@ class FeedbackController extends Controller
             }
         );
 
-        return redirect('/');
+        print "Sent to your email. Thanks";
     }
 }

@@ -86,7 +86,7 @@ class SMSController extends Controller
         $stored_msg->visited_at = null;
 
         try {
-            Twilio::sendSMS($request->get('phoneNumber') , $message);
+            //Twilio::sendSMS($request->get('phoneNumber') , $message);
             $stored_msg->sent = 1;
             $stored_msg->save();
         } catch (Exception $exception) {

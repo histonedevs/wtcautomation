@@ -37,9 +37,8 @@ class CampaignController extends Controller
         if(Auth::user()->user_type == 'admin' OR Auth::user()->user_type == 'supervisor'){
             $columns[] = make_column('download_discounted', null, '', null, [], '<a discount="1" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Promo</a>', null, '0px', null, false);
             $columns[] = make_column('download_non_discounted', null, '', null, [], '<a discount="0" class="btn btn-primary downloadOrdersBtn" href="#" campaign_id="{{$id}}">Standard</a>', null, '0px', null, false);
-            $columns[] = make_column('edit_campaign', null, '', null, [], '<a class="btn btn-primary btn_edit_campaign" href="#" campaign_id="{{$id}}">Edit Name</a>', null, '0px', null, false);
+            $columns[] = make_column('edit_campaign', null, '', null, [], '<a class="btn btn-primary btn_edit_campaign" href="#" campaign_id="{{$id}}">Edit Campaign</a>', null, '0px', null, false);
         }
-
 
         $base_query = DB::table('campaigns')->select(
             ['campaigns.name as campaign_name', 'campaigns.id', 'campaigns.couponCode as campaign_code', 'products.title as product_title', 'products.asin']
