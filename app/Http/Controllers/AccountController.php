@@ -112,6 +112,9 @@ class AccountController extends Controller
     public function getDelete($user_id)
     {
         $user = Account::find($user_id);
+        foreach($user->children as $child){
+            $child->delete();
+        }
         $user->delete();
         return redirect(url("accounts"));
     }

@@ -42,14 +42,15 @@ class CampaignController extends Controller
 
         $base_query = DB::table('campaigns')->select(
             ['campaigns.name as campaign_name', 'campaigns.id', 'campaigns.couponCode as campaign_code', 'products.title as product_title', 'products.asin']
-        )->join('products', 'campaigns.product_id' , '=' , 'products.id');
+        )->join('products', 'campaigns.product_id' , '=' , 'products.id')
+            ->join('accounts', 'campaigns.user_id' , '=' , 'accounts.id')
+        ->whereNull('accounts.deleted_at');
 
         if($user_id){
-            $base_query->join('accounts', 'campaigns.user_id' , '=' , 'accounts.id')
-                        ->where(function($query) use($user_id){
-                            $query->where('campaigns.user_id',$user_id)
-                                ->orWhere('accounts.parent_id',$user_id);
-                        });
+            $base_query->where(function($query) use($user_id){
+                    $query->where('campaigns.user_id',$user_id)
+                        ->orWhere('accounts.parent_id',$user_id);
+                });
 
         }
 
@@ -83,7 +84,7 @@ class CampaignController extends Controller
             ['campaigns.name as campaign_name', 'products.id','products.active', 'products.title as product_title', 'products.asin', 'accounts.company_name']
         )->leftJoin('campaigns', 'campaigns.product_id' , '=' , 'products.id')
         ->join('accounts', 'products.user_id' , '=', 'accounts.id')
-        ;
+            ->whereNull('accounts.deleted_at');
 
         if($this->isAjax($request)){
             return $this->dataTable($columns, $request , Datatables::of($base_query))->make(true);
