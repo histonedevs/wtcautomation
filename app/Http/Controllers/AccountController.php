@@ -37,7 +37,7 @@ class AccountController extends Controller
                 } , null, '0px', null, false),
             make_column('company_name', 'accounts.company_name', 'Company Name' , 'text'),
             make_column('name' , 'accounts.name', 'Name', 'text'),
-            make_column('email' , 'accounts.email', 'Email', 'text'),
+            make_column('contact_email' , 'accounts.contact_email', 'Contact Email', 'text'),
             make_column('edit', null, '', null, [], '<a class="btn btn-primary" href="{{url("accounts/edit/".$id)}}">Edit</a>', null, '0px', null, false),
             make_column('campaign', null, '', null, [], '<a class="btn btn-primary" href="{{url("campaigns/index/".$id)}}">Campaigns</a>', null, '0px', null, false),
             make_column('delete', null, '', null, [], '<a class="btn btn-danger delete_account" href="#" path="{{url("accounts/delete/".$id)}}">Delete</a>', null, '0px', null, false),
@@ -82,6 +82,7 @@ class AccountController extends Controller
             $account->company_name = $request->company_name;
             $account->contact_person = $request->contact_person;
             $account->website = $request->website;
+            $account->contact_email = $request->contact_email;
 
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
@@ -96,6 +97,7 @@ class AccountController extends Controller
                 $child->company_name = $account->company_name;
                 $child->contact_person = $account->contact_person;
                 $child->website = $account->website;
+                $child->contact_email = $account->contact_email;
                 $child->logo = $account->logo;
                 $child->save();
             }

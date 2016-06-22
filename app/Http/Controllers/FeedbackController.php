@@ -153,20 +153,19 @@ class FeedbackController extends Controller
 
         $negResponse->save();
 
-        /*
         $message = Message::find($request->message_id);
         $account = $message->campaign->user;
 
         // Send feedback in E-mail
-        Mail::send('feedback.email', ['feedback' => $request, 'campaign' => $message->campaign],
+        Mail::send('feedback.email.response', ['feedback' => $request, 'campaign' => $message->campaign],
             function ($message) use ($request, $account) {
                 $message
                     ->from($request->email, $request->name)
-                    ->to($account->email, $account->name)
+                    ->to($account->contact_email, $account->name)
                     ->subject('Customer Feedback');
             }
         );
-        */
+
         return redirect('/');
     }
 
@@ -181,7 +180,7 @@ class FeedbackController extends Controller
         $account = $message->campaign->user;
 
         // Send feedback in E-mail
-        Mail::send('feedback.email.sendinemail', ['message_id' => $request->message_id],
+        Mail::send('feedback.email.link', ['message_id' => $request->message_id],
             function ($message) use ($request, $account) {
                 $message
                     ->from($account->email, $account->name)

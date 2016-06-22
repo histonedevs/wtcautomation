@@ -11,7 +11,8 @@ class EditAccountForm extends Form
         $this
             ->add('company_name', 'text', ['rules' => 'required'])
             ->add('contact_person', 'text', ['rules' => 'required'])
-            ->add('website', 'text', ['rules' => 'required']);
+            ->add('website', 'text', ['rules' => 'required'])
+            ->add('contact_email', 'text', ['rules' => 'required']);
 
         if($model = $this->getModel()){
             if($model->logo) {

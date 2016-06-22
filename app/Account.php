@@ -9,7 +9,7 @@ class Account extends Model
 {
     use SoftDeletes;
 
-    protected $fillable=['unique_id','parent_id','name','first_name','last_name','email','merchant_id','auth_token','deleted_at', 'account_title', 'marketplace_id'];
+    protected $fillable=['unique_id','parent_id','name','first_name','last_name','email','merchant_id','auth_token','deleted_at', 'account_title', 'marketplace_id', 'contact_email'];
 
     public function orders()
     {
