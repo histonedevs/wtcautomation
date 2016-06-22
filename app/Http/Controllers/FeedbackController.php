@@ -24,7 +24,9 @@ class FeedbackController extends Controller
         $columns = [
             make_column('customer_name', 'negative_responses.customer_name', 'Customer Name', 'text'),
             make_column('customer_email', 'negative_responses.customer_email', 'Customer Email' , 'text'),
-            make_column('product_title', 'products.title', 'Product Title', 'text'),
+            make_column('reason', 'negative_responses.reason', 'Reason', 'text'),
+            make_column('suggestion', 'negative_responses.suggestion', 'Suggestion' , 'text'),
+            make_column('product_asin', 'products.asin', 'ASIN', 'text'),
             make_column('campaign_name' , 'campaigns.name', 'Campaign Name', 'text'),
 //            make_column('sms', null, '', null, [], '<a class="btn btn-primary sendSmsBtn" href="#" campaign_id="{{$id}}">Send SMS</a>', null, '0px', null, false),
         ];
@@ -32,7 +34,8 @@ class FeedbackController extends Controller
         $base_query = DB::table('negative_responses')->select(
             [   'negative_responses.id', 'negative_responses.customer_name as customer_name',
                 'negative_responses.customer_email as customer_email',
-                'campaigns.name as campaign_name', 'products.title as product_title']
+                'negative_responses.reason as reason', 'negative_responses.suggestion as suggestion',
+                'campaigns.name as campaign_name', 'products.asin as product_asin']
         )
             ->join('messages', 'negative_responses.message_id' , '=' , 'messages.id')
             ->join('campaigns', 'messages.campaign_id' , '=' , 'campaigns.id')
