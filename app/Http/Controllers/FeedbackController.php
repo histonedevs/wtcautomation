@@ -183,7 +183,6 @@ class FeedbackController extends Controller
         Mail::send('feedback.email.link', ['message_id' => $request->message_id],
             function ($message) use ($request, $account) {
                 $message
-                    ->from($account->email, $account->name)
                     ->to($request->get('email'), '')
                     ->subject('Campaign Feedback');
             }
