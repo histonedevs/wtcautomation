@@ -31,5 +31,5 @@
 </p>
 
 --------------------------------------------------------------------------------
-Thank you,
-WTC-Automation Service Team
+<p>Thank you,</p>
+<p>WTC-Automation Service Team</p>
