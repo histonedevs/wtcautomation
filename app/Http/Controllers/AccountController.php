@@ -69,14 +69,14 @@ class AccountController extends Controller
     public function getEdit($account_id)
     {
         $account = Account::find($account_id);
-        $form = $this->form('App\Forms\EditAccountForm', ['model' => $account, 'method' => 'POST']);
+        $form = $this->form('App\Forms\EditAccountForm', ['method' => 'POST'], ['account' => $account]);
         return view('accounts.form', compact('account_id', 'form'));
     }
 
     public function postEdit(Request $request, $account_id)
     {
         $account = Account::find($account_id);
-        $form = $this->form('App\Forms\EditAccountForm', ['model' => $account, 'method' => 'POST']);
+        $form = $this->form('App\Forms\EditAccountForm', ['method' => 'POST'], ['account' => $account]);
 
         if($form->isValid()){
             $account->company_name = $request->company_name;
