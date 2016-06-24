@@ -14,7 +14,7 @@ class EditAccountForm extends Form
             ->add('company_name', 'text', ['rules' => 'required', 'value' => $account->company_name])
             ->add('contact_person', 'text', ['rules' => 'required', 'value' => $account->contact_person])
             ->add('website', 'text', ['rules' => 'required', 'value' => $account->website])
-            ->add('contact_email', 'text', ['rules' => 'required', 'value' => $account->contact_email]);
+            ->add('contact_email', 'text', ['rules' => 'required', 'value' => $account->contact_email])
             ->add('video_link_pos_response', 'text', [
                 'label' => 'Add iframe for Video Link in Positive Response',
                 'value' => $account->video_link_pos_response,
