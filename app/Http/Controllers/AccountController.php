@@ -83,6 +83,8 @@ class AccountController extends Controller
             $account->contact_person = $request->contact_person;
             $account->website = $request->website;
             $account->contact_email = $request->contact_email;
+            $account->video_link_pos_response = $request->video_link_pos_response;
+            $account->video_link_neg_response = $request->video_link_neg_response;
 
             if ($request->hasFile('logo')) {
                 $file = $request->file('logo');
@@ -98,6 +100,8 @@ class AccountController extends Controller
                 $child->contact_person = $account->contact_person;
                 $child->website = $account->website;
                 $child->contact_email = $account->contact_email;
+                $child->video_link_pos_response = $account->video_link_pos_response;
+                $child->video_link_neg_response = $account->video_link_neg_response;
                 $child->logo = $account->logo;
                 $child->save();
             }
