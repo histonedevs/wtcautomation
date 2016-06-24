@@ -11,7 +11,15 @@
 
                 <div style="clear:both; margin-top:-30px;">&nbsp;</div>
                 <h3>Click below to play the video:</h3>
-                <iframe width="100%" src="https://www.youtube.com/embed/0w0mfxjoHsc?rel=0&showinfo=0&autoplay=1" allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen" msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen" webkitallowfullscreen="webkitallowfullscreen"></iframe>
+                @if(!empty($account->video_link_pos_response))
+                    {!! $account->video_link_pos_response !!}
+                @else
+                    <iframe width="100%" src="https://www.youtube.com/embed/0w0mfxjoHsc?rel=0&showinfo=0&autoplay=1"
+                            allowfullscreen="allowfullscreen" mozallowfullscreen="mozallowfullscreen"
+                            msallowfullscreen="msallowfullscreen" oallowfullscreen="oallowfullscreen"
+                            webkitallowfullscreen="webkitallowfullscreen"></iframe>
+                @endif
+
                 <br><br>
                 <p>
                     <a href="{{ url("v/{$message_id}/5") }}" style="text-decoration:none; color:#000000;">

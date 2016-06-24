@@ -12,7 +12,15 @@ class EditAccountForm extends Form
             ->add('company_name', 'text', ['rules' => 'required'])
             ->add('contact_person', 'text', ['rules' => 'required'])
             ->add('website', 'text', ['rules' => 'required'])
-            ->add('contact_email', 'text', ['rules' => 'required']);
+            ->add('contact_email', 'text', ['rules' => 'required'])
+            ->add('video_link_pos_response', 'text', [
+                'label' => 'Add iframe for Video Link in Positive Response',
+                'value' => ''
+            ])
+            ->add('video_link_neg_response', 'text', [
+                'label' => 'Add iframe for Video Link in Negative Response',
+                'value' => ''
+            ]);
 
         if($model = $this->getModel()){
             if($model->logo) {
