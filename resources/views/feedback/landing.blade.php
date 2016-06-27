@@ -13,7 +13,7 @@
 
                 <h2>Thank you!</h2>
                 @if(!empty($message->couponCode))
-                    <p>Here is Your Customer Appreciation Gift.<br/>Record this code for your next purchase on Amazon:</p>
+                    <p>Here is Your Customer Appreciation Gift.<br/>Record this code for your next purchase from us on Amazon.</p>
                     <h1 style="text-decoration: underline;">{{ $message->couponCode }}</h1>
                 @endif
                 <br/><br/>

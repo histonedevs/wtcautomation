@@ -1,11 +1,17 @@
 @extends('layout.feedback')
 
 @section('page-content')
-
+    <style>
+        @media screen and (min-width: 768px){
+            #main{
+                height: 900px;
+            }
+        }
+    </style>
     <!-- Wrapper -->
     <div id="wrapper">
         <!-- Main -->
-        <section id="main" class="col-sm-9 col-md-9">
+        <section id="main" style="width: 800px">
             <header style="margin-bottom: 25px;">
                 <img src="{{ $account->logo }}" alt="{{ $account->company_name }}" title="{{ $account->company_name }}"
                      style="max-width: 85%;" class="aligncenter size-full wp-image-3018"/>
@@ -61,7 +67,7 @@
                         </div>
                     {!! Form::close() !!}
                 </div>
-
+            <div style="width: 100%; float: left">&nbsp;</div>
         </section>
     </div>
 

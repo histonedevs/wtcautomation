@@ -108,10 +108,10 @@ body:after {
 	background-repeat: repeat,			no-repeat;
 	background-size: 100px 100px, cover;
 	background-position: top left,		center center;
-	-moz-transition: opacity 1.75s ease-out;
+	/*-moz-transition: opacity 1.75s ease-out;
 	-webkit-transition: opacity 1.75s ease-out;
 	-ms-transition: opacity 1.75s ease-out;
-	transition: opacity 1.75s ease-out;
+	transition: opacity 1.75s ease-out;*/
 }
 
 body.is-loading:after {
@@ -705,18 +705,8 @@ button:disabled,
 	cursor: default;
 	opacity: 0.95;
 	text-align: center;
-	-moz-transform-origin: 50% 50%;
-	-webkit-transform-origin: 50% 50%;
-	-ms-transform-origin: 50% 50%;
-	transform-origin: 50% 50%;
-	-moz-transform: rotateX(0deg);
-	-webkit-transform: rotateX(0deg);
-	-ms-transform: rotateX(0deg);
-	transform: rotateX(0deg);
-	-moz-transition: opacity 1s ease, -moz-transform 1s ease;
-	-webkit-transition: opacity 1s ease, -webkit-transform 1s ease;
-	-ms-transition: opacity 1s ease, -ms-transform 1s ease;
-	transition: opacity 1s ease, transform 1s ease;
+	width: 450px;
+	margin: 0 auto;
 }
 
 #main .avatar {
@@ -759,14 +749,6 @@ button:disabled,
 
 }
 
-body.is-loading #main {
-	/*opacity: 0;*/
-	-moz-transform: rotateX(15deg);
-	-webkit-transform: rotateX(15deg);
-	-ms-transform: rotateX(15deg);
-	transform: rotateX(15deg);
-}
-
 /* Footer */
 
 #footer {
@@ -803,10 +785,7 @@ body.is-loading #main {
 /* Wrapper */
 
 #wrapper {
-	display: -moz-flex;
-	display: -webkit-flex;
-	display: -ms-flex;
-	display: flex;
+	display: block;
 	-moz-align-items: center;
 	-webkit-align-items: center;
 	-ms-align-items: center;

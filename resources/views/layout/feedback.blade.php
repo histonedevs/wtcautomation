@@ -11,8 +11,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}" type="text/css" />
-    <script src="{{ asset('assets/js/jquery.js') }}"></script>
-    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 
 
     <!--[if lte IE 8]>
@@ -34,18 +32,10 @@
 
     @yield('page-content')
 
-    @section('on-page-js')
-        <!-- Scripts -->
-        <script>
-            if ('addEventListener' in window) {
-                window.addEventListener('load', function () {
-                    document.body.className = document.body.className.replace(/\bis-loading\b/, '');
-                });
-                document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
-            }
-        </script>
-    @show
+    <script src="{{ asset('assets/js/jquery.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 
+    @yield('on-page-js')
     @include("analytics")
 
 </body>
