@@ -72,7 +72,8 @@ class SMSController extends Controller
         ]);
 
         $long_url = url("r/{$stored_msg->id}");
-        $short_url = GoogleUrl::getShortURL($long_url);
+
+        $short_url = \UrlShortener::shorten($long_url);
         $short_url = ($short_url)?$short_url: $long_url;
         //$short_url = $long_url;
 

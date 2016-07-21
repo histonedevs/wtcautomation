@@ -151,6 +151,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Kris\LaravelFormBuilder\FormBuilderServiceProvider::class,
         yajra\Datatables\DatatablesServiceProvider::class,
+        Waavi\UrlShortener\UrlShortenerServiceProvider::class,
     ],
 
     /*
@@ -206,6 +207,7 @@ return [
         'FormBuilder' => Kris\LaravelFormBuilder\Facades\FormBuilder::class,
         'Datatables' => yajra\Datatables\Datatables::class,
         'Twilio' => Aloha\Twilio\Support\Laravel\Facade::class,
+        'UrlShortener' => Waavi\UrlShortener\Facades\UrlShortener::class,
     ],
 
 ];
