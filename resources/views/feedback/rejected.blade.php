@@ -28,9 +28,9 @@
                                 webkitallowfullscreen="webkitallowfullscreen"></iframe>
                     @endif
 
-                    <p>We are really sorry your experience was not great.</p>
-                    <p>Our company is focused on every customer and client having a first class experience. Unfortunately, sometimes companies make mistakes and it looks like your experience wasn't as good as we would like it to be.</p>
-                    <p>We want the opportunity to correct our mistake. Please contact us directly and let us know how we can turn your negative experience into a 5-star first class experience.</p>
+                    <p>We Apologize that we let you down.</p>
+                    <p>How Can We Improve?</p>
+                    <p>Please help us learn how we can turn this negative, into a 5-star first-class experience for you!</p>
 
                     @if(!empty($account->company_name))
                         <p><strong>{{ $account->company_name }}</strong></p>
@@ -38,26 +38,24 @@
                 </div>
 
                 <div class="col-sm-6 col-md-6">
-                    <h2>We Apologize... How Can We Improve?</h2>
-                    <br>
                     {!! Form::open(array('url' => 'feedback/send-feedback', 'method' => 'POST')) !!}
                         <div class="form-group{{ $errors->has('reason') ? ' has-error' : '' }}">
-                            <label class="control-label">1. What happened that was unsatisfactory?</label>
+                            <label class="control-label">What happened that was unsatisfactory?</label>
                             <textarea class="form-control" rows="3" name="reason" ></textarea>
                         </div>
 
                         <div class="form-group{{ $errors->has('suggestion') ? ' has-error' : '' }}">
-                            <label class="control-label">2. How can we make it better so this won’t happen again?</label>
+                            <label class="control-label">How can we make it better so this won’t happen again?</label>
                             <textarea class="form-control" rows="3" name="suggestion"></textarea>
                         </div>
 
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label class="control-label">3. First & Last Name</label>
+                            <label class="control-label">First & Last Name</label>
                             <input type="text" name="name" placeholder="Name" class="form-control" />
                         </div>
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label class="control-label">4. Email</label>
+                            <label class="control-label">Email</label>
                             <input type="email" name="email" placeholder="Email" class="form-control" />
                         </div>
 
